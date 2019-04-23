@@ -24,21 +24,7 @@ $router->get('/ping', function () use ($router) {
     ];
 });
 
-
-/*
- * Routes for:
- * /auth
- *      /login      - Login with email and password. [Return a JWT, Refresh token]
- *          /google - Login with Google. [Return a JWT, Refresh token]
- *
- *      /logout     - Authenticate with JWT. [Revoke refresh_token] (How do you know which refresh token to revoke? Maybe place refresh_token id in payload)
- *
- *      /refresh    - Authenticate with refresh_token. [Refresh JWT]
- *
- * */
-
-
-$router->group([/*'middleware' => 'auth'*/], function () use ($router) {
+$router->group(['middleware' => 'auth'], function () use ($router) {
     // GET /users - display list of users
     $router->get('/users', 'UserController@showAll');
 
@@ -57,4 +43,14 @@ $router->group([/*'middleware' => 'auth'*/], function () use ($router) {
     // GET /products - Get all products
 });
 
-// ar wn:resource user "name;string;required;fillable email;string;required;unique;fillable" --add=timestamps
+/*
+ * Routes for:
+ * /auth
+ *      /login      - Login with email and password. [Return a JWT, Refresh token]
+ *          /google - Login with Google. [Return a JWT, Refresh token]
+ *
+ *      /logout     - Authenticate with JWT. [Revoke refresh_token] (How do you know which refresh token to revoke? Maybe place refresh_token id in payload)
+ *
+ *      /refresh    - Authenticate with refresh_token. [Refresh JWT]
+ *
+ * */

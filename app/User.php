@@ -19,7 +19,6 @@ class User extends Model {
     public static $rules = [
         'name'  => 'required',
         'email' => 'required',
-        'password' => 'required',
         'address' => 'required',
     ];
 
@@ -30,10 +29,8 @@ class User extends Model {
      */
     protected $fillable = [
         'name',
-        'active', // default: false
-        'authentication_method', // default: 'email'
+        'active',
         'email',
-        'password', // nullable
         'address'
     ];
 
@@ -43,8 +40,7 @@ class User extends Model {
      * @var array
      */
     protected $hidden = [
-        'authentication_method',
-        'password'
+        'active'
     ];
 
     /**
