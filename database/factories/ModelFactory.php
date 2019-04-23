@@ -17,6 +17,12 @@
 $factory->define(App\User::class, function ($faker) {
     return [
         'name' => $faker->name,
-        'email' => $faker->email
+        'active' => $faker->boolean,
+
+        'authentication_method' => 'email',
+        'email' => $faker->unique()->safeEmail,
+        'password' => app('hash')->make($faker->password),
+
+        'address' => $faker->address
     ];
 });

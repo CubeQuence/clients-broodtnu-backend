@@ -12,19 +12,49 @@
 */
 
 $router->get('/', function () use ($router) {
-    return ['documentation_url' => 'https://lunchbox.gitbook.io/'];
+    return [
+        'documentation_url' => 'https://lunchbox.gitbook.io/'
+    ];
 });
 
-$router->get('/ping', ['as' => 'ping', function () use ($router) {
-    return ['time' => date('Y-m-d H:i:s'), 'message' => 'pong'];
-}]);
+$router->get('/ping', function () use ($router) {
+    return [
+        'time' => date('Y-m-d H:i:s'),
+        'message' => 'pong'
+    ];
+});
 
-$router->group([/*'middleware' => 'auth', */ 'prefix' => 'user', 'as' => 'user'], function () use ($router) {
-    $router->get('', 'UsersController@all');            // Get all users
-    $router->get('{id}', 'UsersController@get');        // Get specific user
-    $router->post('', 'UsersController@add');           // Create user
-    $router->put('{id}', 'UsersController@put');        // Update user
-    $router->delete('{id}', 'UsersController@remove');  // Delete user
+
+/*
+ * Routes for:
+ * /auth
+ *      /login      - Login with email and password. [Return a JWT, Refresh token]
+ *          /google - Login with Google. [Return a JWT, Refresh token]
+ *
+ *      /logout     - Authenticate with JWT. [Revoke refresh_token] (How do you know which refresh token to revoke? Maybe place refresh_token id in payload)
+ *
+ *      /refresh    - Authenticate with refresh_token. [Refresh JWT]
+ *
+ * */
+
+
+$router->group([/*'middleware' => 'auth'*/], function () use ($router) {
+    // GET /users - display list of users
+    $router->get('/users', 'UserController@showAll');
+
+    // GET /users/:id - display specific user
+    $router->get('/users/{id}', 'UserController@showOne');
+
+    // POST /users/:id - add user
+    $router->post('/users', 'UserController@create');
+
+    // PUT /users/:id - edit user
+    $router->put('/users/{id}', 'UserController@update');
+
+    // DELETE /users/:id - delete user
+    $router->delete('/users/{id}', 'UserController@delete');
+
+    // GET /products - Get all products
 });
 
 // ar wn:resource user "name;string;required;fillable email;string;required;unique;fillable" --add=timestamps

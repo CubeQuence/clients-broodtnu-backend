@@ -18,8 +18,8 @@ class CORSMiddleware {
     {
         $headers = [
             'Access-Control-Allow-Origin'  => implode(", ", config('cors.allow_origins')),
-            'Access-Control-Allow-Methods' => implode(", ", config('cors.allow_headers')),
-            'Access-Control-Allow-Headers' => implode(", ", config('cors.allow_methods')),
+            'Access-Control-Allow-Methods' => implode(", ", config('cors.allow_methods')),
+            'Access-Control-Allow-Headers' => implode(", ", config('cors.allow_headers')),
         ];
 
         $response = $next($request);
