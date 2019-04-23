@@ -24,7 +24,7 @@ $router->get('/ping', function () use ($router) {
     ];
 });
 
-$router->group(['middleware' => 'auth'], function () use ($router) {
+$router->group([/*'middleware' => 'auth'*/], function () use ($router) {
     // GET /users - display list of users
     $router->get('/users', 'UserController@showAll');
 
