@@ -21,12 +21,12 @@ $router->get('/ping', function () use ($router) {
     return [
         'time' => date('Y-m-d H:i:s'),
         'message' => 'pong',
-        'test' => 'JWT_PUBLIC_KEY="{' .config('JWT.public_key') . '}"'
+        'test' => config('JWT.public_key')
     ];
 });
 
 // POST /auth/login - Login with email and password. [Return a JWT, Refresh token]
-$router->post('/auth/login', 'AuthController@authenticate');
+$router->post('/auth/login', 'AuthController@login');
 
 
 $router->group(['middleware' => 'auth'], function () use ($router) {

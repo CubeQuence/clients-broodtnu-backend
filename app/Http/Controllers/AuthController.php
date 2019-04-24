@@ -7,45 +7,29 @@ use App\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use \Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller {
-
-    /**
-     * The request instance.
-     *
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     /**
      * Authenticate a user and return the token if the provided credentials are correct.
      *
-     * @param User $user
+     * @param Request $request
+     *
      * @return mixed
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    public function authenticate(User $user)
+    public function login(Request $request)
     {
-        $this->validate($this->request, [
+        $this->validate($request, [
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         // Find the user by email
-        $user = User::where('email', $this->request->input('email'))->first();
+        $user = User::where('email', $request->get('email'))->first();
 
         if (!$user) {
+
             // TODO: Add helper to assure same style messages.
             return response()->json([
                 'error' => 'Email does not exist.',
@@ -53,10 +37,11 @@ class AuthController extends Controller {
         }
 
         // Verify the password and generate the token
-        if (Hash::check($this->request->input('password'), $user->password)) {
+        if (Hash::check($request->get('password'), $user->password)) {
+
             // TODO: Add helper to assure same style messages.
             return response()->json([
-                'token' => $this->jwt($user),
+                'token' => $this->generateJWT($user),
             ], 200);
         }
 
@@ -71,19 +56,18 @@ class AuthController extends Controller {
      * Create a new token.
      *
      * @param User $user
+     *
      * @return string
      */
-    protected function jwt(User $user)
+    protected function generateJWT(User $user)
     {
         $payload = [
             'iss' => "Broodt-Nu", // Issuer of the token
             'sub' => $user->id, // Subject of the token
             'iat' => time(), // Time when JWT was issued.
-            'exp' => time() + 60 * 15 // Expiration time (15 minutes)
+            'exp' => time() + config('JWT.ttl') // Expiration time
         ];
 
-        // As you can see we are passing `JWT_SECRET` as the second parameter that will
-        // be used to decode the token in the future.
-        return JWT::encode($payload, env('JWT_SECRET'), config('JWT.algorithm'));
+        return JWT::encode($payload, config('JWT.private_key'), config('JWT.algorithm'));
     }
 }

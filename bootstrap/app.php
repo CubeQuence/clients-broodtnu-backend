@@ -34,7 +34,7 @@ $app->withEloquent();
 |
 */
 
-$app->configure('cors');
+$app->configure('CORS');
 $app->configure('JWT');
 
 /*

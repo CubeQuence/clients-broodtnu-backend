@@ -12,6 +12,7 @@ class JSONMiddleware {
      *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
 

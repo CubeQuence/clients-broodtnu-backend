@@ -11,16 +11,22 @@ use Illuminate\Http\Request;
 
 class JWTMiddleware {
 
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * Handle an incoming request.
      *
      * @param Request  $request
      * @param Closure  $next
+     *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
-        $token = $request->get('token');
+        $token = $this->parseAuthHeader('Authorization', 'Bearer');
 
         if (!$token) {
             // TODO: Add helper to assure same style messages.
@@ -43,10 +49,29 @@ class JWTMiddleware {
             ], 400);
         }
 
-        $user = User::find($credentials->sub);
         // Now let's put the user in the request class so that you can grab it from there
+        $user = User::find($credentials->sub);
         $request->auth = $user;
 
         return $next($request);
+    }
+
+    /**
+     * Parse token from the authorization header.
+     *
+     * @param string $header
+     * @param string $method
+     *
+     * @return false|string
+     */
+    protected function parseAuthHeader($header, $method)
+    {
+        $headerValue = $this->request->headers->get($header);
+
+        if (strpos($headerValue, $method) === false) {
+            return false;
+        }
+
+        return trim(str_ireplace($method, '', $headerValue));
     }
 }
