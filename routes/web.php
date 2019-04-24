@@ -20,10 +20,10 @@ $router->get('/', function () use ($router) {
 $router->get('/ping', function () use ($router) {
     return [
         'time' => date('Y-m-d H:i:s'),
-        'message' => 'pong',
-        'test' => config('JWT.public_key')
+        'message' => 'pong'
     ];
 });
+
 
 // POST /auth/login - Login with email and password. [Return a JWT, Refresh token]
 $router->post('/auth/login', 'AuthController@login');

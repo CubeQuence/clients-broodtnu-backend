@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class CORSMiddleware {
 
     /**
-     * Add CORS headers to requests.
+     * Add CORS headers to requests
      *
      * @param Request $request
      * @param Closure $next

@@ -12,7 +12,7 @@ class JWTGenerateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'jwt:generate {bits=2048}';
+    protected $signature = 'jwt:generate {bits=512}';
 
     /**
      * The console command description.

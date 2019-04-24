@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class JSONMiddleware {
 
     /**
-     * If requests contains JSON interpret it.
+     * If requests contains JSON interpret it
      *
      * @param Request $request
      * @param Closure $next
