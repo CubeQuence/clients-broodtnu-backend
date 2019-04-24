@@ -19,7 +19,8 @@ class User extends Model {
     public static $rules = [
         'name'  => 'required',
         'email' => 'required',
-        'address' => 'required',
+        'password' => 'required',
+        //'address' => 'required',
     ];
 
     /**
@@ -29,9 +30,10 @@ class User extends Model {
      */
     protected $fillable = [
         'name',
-        'active',
         'email',
-        'address'
+        'password',
+        //'active',
+        //'address'
     ];
 
     /**
@@ -40,7 +42,8 @@ class User extends Model {
      * @var array
      */
     protected $hidden = [
-        'active'
+        'password',
+        //'active'
     ];
 
     /**

@@ -24,7 +24,11 @@ $router->get('/ping', function () use ($router) {
     ];
 });
 
-$router->group([/*'middleware' => 'auth'*/], function () use ($router) {
+// POST /auth/login - Login with email and password. [Return a JWT, Refresh token]
+$router->post('/auth/login', 'AuthController@authenticate');
+
+
+$router->group(['middleware' => 'auth'], function () use ($router) {
     // GET /users - display list of users
     $router->get('/users', 'UserController@showAll');
 
