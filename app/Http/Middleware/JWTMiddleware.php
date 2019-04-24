@@ -23,18 +23,21 @@ class JWTMiddleware {
         $token = $request->get('token');
 
         if (!$token) {
+            // TODO: Add helper to assure same style messages.
             return response()->json([
                 'error' => 'Token not provided.'
             ], 401);
         }
 
         try {
-            $credentials = JWT::decode($token, env('JWT_SECRET'), [config('JWT.algorithm')]);
+            $credentials = JWT::decode($token, config('JWT.public_key'), [config('JWT.algorithm')]);
         } catch (ExpiredException $e) {
+            // TODO: Add helper to assure same style messages.
             return response()->json([
                 'error' => 'Provided token is expired.'
             ], 400);
         } catch (Exception $e) {
+            // TODO: Add helper to assure same style messages.
             return response()->json([
                 'error' => 'An error while decoding token.'
             ], 400);

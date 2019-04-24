@@ -46,7 +46,7 @@ class AuthController extends Controller {
         $user = User::where('email', $this->request->input('email'))->first();
 
         if (!$user) {
-
+            // TODO: Add helper to assure same style messages.
             return response()->json([
                 'error' => 'Email does not exist.',
             ], 400);
@@ -54,13 +54,14 @@ class AuthController extends Controller {
 
         // Verify the password and generate the token
         if (Hash::check($this->request->input('password'), $user->password)) {
-
+            // TODO: Add helper to assure same style messages.
             return response()->json([
                 'token' => $this->jwt($user),
             ], 200);
         }
 
         // Bad Request response
+        // TODO: Add helper to assure same style messages.
         return response()->json([
             'error' => 'Email or password is wrong.',
         ], 400);
