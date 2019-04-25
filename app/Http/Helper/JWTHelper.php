@@ -9,14 +9,29 @@ use Firebase\JWT\ExpiredException;
 use Exception;
 
 class JWTHelper {
+
+    /**
+     * Creates a new set of access en refresh tokens
+     *
+     * @param $user_id
+     *
+     * @return array
+     */
     public static function issue($user_id)
     {
         return [
-            'access_token' => $this->issueAccessToken($user_id),
-            'refresh_token' =>  $this->issueRefreshToken($user_id)
+            'access_token' =>JWTHelper::issueAccessToken($user_id),
+            'refresh_token' =>  JWTHelper::issueRefreshToken($user_id)
         ];
     }
 
+    /**
+     * Refreshes the access_token, and provides a new refresh_token
+     *
+     * @param $refresh_token
+     *
+     * @return bool|array
+     */
     public static function refresh($refresh_token)
     {
         $user_id = JWTHelper::validateRefreshToken($refresh_token);
@@ -27,26 +42,44 @@ class JWTHelper {
 
         JWTHelper::revokeRefreshToken($refresh_token);
 
-        return JWTHelper::issueRefreshToken($user_id);
+        return JWTHelper::issue($user_id);
     }
 
+    /**
+     * Checks if access_token is valid
+     * If valid returns the token payload
+     *
+     * @param $access_token
+     *
+     * @return object
+     */
     public function authenticate($access_token) {
         return JWTHelper::validateAccessToken($access_token);
     }
 
+    /**
+     * Logs user out
+     *
+     * @param $refresh_token
+     *
+     * @return bool|null
+     */
     public static function logout($refresh_token)
     {
-        $user_id = JWTHelper::validateRefreshToken($refresh_token);
-
-        if (!$user_id) {
+        if (!JWTHelper::validateRefreshToken($refresh_token)) {
             return false;
         }
 
-        JWTHelper::revokeRefreshToken($refresh_token);
-
-        return true;
+        return JWTHelper::revokeRefreshToken($refresh_token);
     }
 
+    /**
+     * Validates a access_token
+     *
+     * @param null|string $access_token
+     *
+     * @return object
+     */
     private static function validateAccessToken($access_token = null) {
         if (!$access_token) {
             return (object) [
@@ -72,12 +105,19 @@ class JWTHelper {
         return $credentials;
     }
 
+    /**
+     * Validates a refresh_token
+     *
+     * @param null|string $refresh_token
+     *
+     * @return bool|integer
+     */
     private static function validateRefreshToken($refresh_token = null) {
         if (!$refresh_token) {
             return false;
         }
 
-        $refresh_token = RefreshToken::where('refresh_token', $refresh_token)-first();
+        $refresh_token = RefreshToken::where('refresh_token', $refresh_token)->first();
 
         if (!$refresh_token || $refresh_token->expires_at->isPast()) {
             return false;
@@ -86,6 +126,13 @@ class JWTHelper {
         return $refresh_token->user_id;
     }
 
+    /**
+     * Creates an access_token for a user
+     *
+     * @param $user_id
+     *
+     * @return string
+     */
     private static function issueAccessToken($user_id) {
         $payload = [
             'iss' => env('APP_URL'),
@@ -99,6 +146,13 @@ class JWTHelper {
         return $access_token;
     }
 
+    /**
+     * Creates an refresh_token for a user
+     *
+     * @param $user_id
+     *
+     * @return string
+     */
     private static function issueRefreshToken($user_id) {
         $refresh_token = new RefreshToken();
 
@@ -111,7 +165,14 @@ class JWTHelper {
         return $refresh_token->refresh_token;
     }
 
+    /**
+     * Revoke a refresh_token
+     *
+     * @param $refresh_token
+     *
+     * @return bool|null
+     */
     private static function revokeRefreshToken($refresh_token) {
-        RefreshToken::where('refresh_token', $refresh_token)->delete();
+        return RefreshToken::where('refresh_token', $refresh_token)->delete();
     }
 }
