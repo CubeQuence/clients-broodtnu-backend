@@ -29,8 +29,7 @@ class JWTMiddleware {
         }
 
         // Put the user in the request class so that you can grab it from there
-        $user = User::find($credentials->sub);
-        $request->auth = $user;
+        $request->user = User::findOrFail($credentials->sub);
 
         return $next($request);
     }

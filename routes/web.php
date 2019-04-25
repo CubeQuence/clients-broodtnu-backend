@@ -11,18 +11,13 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return [
-        'documentation_url' => 'https://docs.broodt.nu'
-    ];
-});
 
-$router->get('ping', function () use ($router) {
-    return [
-        'time' => date('Y-m-d H:i:s'),
-        'message' => 'pong'
-    ];
-});
+/**
+ * General
+ */
+$router->get('/', 'GeneralController@root');
+$router->get('ping', 'GeneralController@ping');
+$router->get('meta', 'GeneralController@meta');
 
 
 /**
@@ -30,15 +25,15 @@ $router->get('ping', function () use ($router) {
  */
 $router->post('auth/login', 'AuthController@login');
 $router->post('auth/logout', 'AuthController@logout');
-$router->post('auth/refresh', 'AuthController@refresh');
 $router->post('auth/register', 'AuthController@register');
+$router->post('auth/refresh', 'AuthController@refresh');
 
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
     /**
      * Current User
      */
-    $router->get('user', 'UserController@view');
+    $router->get('user', 'UserController@index');
     $router->put('user', 'UserController@update');
     $router->delete('user', 'UserController@delete');
 });

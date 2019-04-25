@@ -1,16 +1,18 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Helper\JWTHelper;
-
+use App\Http\Helper\CaptchaHelper;
+use App\Http\Validators\ValidatesAuthRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller {
+    use ValidatesAuthRequests;
+
     /**
      * Login user and return tokens
      *
@@ -21,12 +23,9 @@ class AuthController extends Controller {
      */
     public function login(Request $request)
     {
-        $this->validate($request, [
-            'email'    => 'required|email|max:255',
-            'password' => 'required',
-        ]);
+        $this->validateLogin($request);
 
-        $user = User::select('id', 'password')->where('email', $request->get('email'))->first();
+        $user = User::where('email', $request->get('email'))->first();
 
         if (!$user || !Hash::check($request->get('password'), $user->password)) {
             return $this->respond([
@@ -48,11 +47,8 @@ class AuthController extends Controller {
      * @throws
      */
     public function refresh(Request $request) {
-        $this->validate($request, [
-            'refresh_token' => 'required'
-        ]);
+        $this->validateRefreshToken($request);
 
-        // Return a new access_token and refresh_token
         return response()->json(JWTHelper::refresh($request->get('refresh_token'), $request->ip()));
     }
 
@@ -65,12 +61,10 @@ class AuthController extends Controller {
      * @throws
      */
     public function logout(Request $request) {
-        $this->validate($request, [
-            'refresh_token' => 'required'
-        ]);
+        $this->validateRefreshToken($request);
 
         return response()->json([
-            'success' => JWTHelper::logout($request->get('refresh_token'))
+            'success' => (bool) JWTHelper::logout($request->get('refresh_token'))
         ]);
     }
 
@@ -83,15 +77,19 @@ class AuthController extends Controller {
      * @throws
      */
     public function register(Request $request) {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'address' => 'required|alpha'
+        if (!CaptchaHelper::validate($request->get('captcha_response'))) {
+            return response()->json([
+                'error' => 'invalid captcha'
+            ], 401);
+        }
+
+        $this->validateRegister($request);
+        
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->input('password'))
         ]);
-
-        // TODO: add captcha
-
-        $user = User::create($request->all());
 
         return response()->json($user, 201);
     }

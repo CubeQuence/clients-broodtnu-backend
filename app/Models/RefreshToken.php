@@ -16,4 +16,15 @@ class RefreshToken extends Model
         'refresh_token',
         'expires_at'
     ];
+
+    /**
+     * The fields that will be transformed by Carbon.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'expires_at'
+    ];
 }
