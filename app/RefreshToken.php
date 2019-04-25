@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * The eloquent model for RefreshToken
+ * @package App
+ */
 class RefreshToken extends Model
 {
     /**

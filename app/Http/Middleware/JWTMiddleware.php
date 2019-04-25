@@ -32,9 +32,15 @@ class JWTMiddleware {
         $access_token = $this->parseAuthHeader($request);
         $credentials = $this->jwt->authenticate($access_token);
 
+        if (isset($credentials->error)) {
+            $http_code = $credentials->http;
+            unset($credentials->http);
+            return response()->json($credentials, $http_code);
+        }
+
         // Put the user in the request class so that you can grab it from there
-        //$user = User::find($credentials->sub);
-        //$request->auth = $user;
+        $user = User::find($credentials->sub);
+        $request->auth = $user;
 
         return $next($request);
     }

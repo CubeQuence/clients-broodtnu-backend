@@ -3,19 +3,13 @@
 namespace App\Http\Helper;
 
 use App\RefreshToken;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
+use Exception;
 
 class JWTHelper {
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    public function issue($user_id)
+    public static function issue($user_id)
     {
         return [
             'access_token' => $this->issueAccessToken($user_id),
@@ -23,76 +17,76 @@ class JWTHelper {
         ];
     }
 
-    public function refresh($refresh_token)
+    public static function refresh($refresh_token)
     {
-        $user_id = $this->validateRefreshToken($refresh_token);
+        $user_id = JWTHelper::validateRefreshToken($refresh_token);
 
         if (!$user_id) {
             return false;
         }
 
-        $this->revokeRefreshToken($refresh_token);
+        JWTHelper::revokeRefreshToken($refresh_token);
 
-        return $this->issueRefreshToken($user_id);
+        return JWTHelper::issueRefreshToken($user_id);
     }
 
     public function authenticate($access_token) {
-        return $this->validateAccessToken($access_token);
+        return JWTHelper::validateAccessToken($access_token);
     }
 
-    public function logout($refresh_token)
+    public static function logout($refresh_token)
     {
-        $user_id = $this->validateRefreshToken($refresh_token);
+        $user_id = JWTHelper::validateRefreshToken($refresh_token);
 
         if (!$user_id) {
             return false;
         }
 
-        $this->revokeRefreshToken($refresh_token);
+        JWTHelper::revokeRefreshToken($refresh_token);
 
         return true;
     }
 
-
-    private function validateAccessToken($access_token = null) {
+    private static function validateAccessToken($access_token = null) {
         if (!$access_token) {
-            return response()->json([
-                'error' => 'Token not provided.'
-            ], 401);
+            return (object) [
+                'error' => 'Access_token not provided.',
+                'http' => 401
+            ];
         }
 
         try {
             $credentials = JWT::decode($access_token, config('JWT.public_key'), [config('JWT.algorithm')]);
         } catch (ExpiredException $error) {
-            return response()->json([
-                'error' => 'Provided token is expired.'
-            ], 400);
+            return (object) [
+                'error' => 'Access_token has expired.',
+                'http' => 400
+            ];
         } catch (Exception $error) {
-            return response()->json([
-                'error' => 'An error while decoding token.'
-            ], 400);
+            return (object) [
+                'error' => 'Access_token has invalid signature.',
+                'http' => 400
+            ];
         }
 
         return $credentials;
     }
 
-    private function validateRefreshToken($refresh_token = null) {
+    private static function validateRefreshToken($refresh_token = null) {
         if (!$refresh_token) {
-            return response()->json([
-                'error' => 'Token not provided.'
-            ], 401);
+            return false;
         }
 
         $refresh_token = RefreshToken::where('refresh_token', $refresh_token)-first();
 
-        if ($refresh_token->expires_at->isPast()) {
+        if (!$refresh_token || $refresh_token->expires_at->isPast()) {
             return false;
         }
 
         return $refresh_token->user_id;
     }
 
-    private function issueAccessToken($user_id) {
+    private static function issueAccessToken($user_id) {
         $payload = [
             'iss' => env('APP_URL'),
             'sub' => $user_id,
@@ -105,7 +99,7 @@ class JWTHelper {
         return $access_token;
     }
 
-    private function issueRefreshToken($user_id) {
+    private static function issueRefreshToken($user_id) {
         $refresh_token = new RefreshToken();
 
         $refresh_token->user_id = $user_id;
@@ -117,7 +111,7 @@ class JWTHelper {
         return $refresh_token->refresh_token;
     }
 
-    private function revokeRefreshToken($refresh_token) {
+    private static function revokeRefreshToken($refresh_token) {
         RefreshToken::where('refresh_token', $refresh_token)->delete();
     }
 }

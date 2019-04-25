@@ -2,6 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * The eloquent model for User
+ * @package App
+ */
 class User extends Model {
 
     /**
