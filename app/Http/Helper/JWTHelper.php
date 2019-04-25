@@ -4,23 +4,41 @@ namespace App\Http\Helper;
 
 use App\RefreshToken;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
 use Exception;
 
 class JWTHelper {
+    /**
+     * Parses Authorization header
+     *
+     * @param Request $request
+     *
+     * @return bool|string
+     */
+    public static function parseAuthHeader(Request $request) {
+        $header_value = $request->headers->get('Authorization');
+
+        if (strpos($header_value, 'Bearer') === false) {
+            return false;
+        }
+
+        return trim(str_ireplace('Bearer', '', $header_value));
+    }
 
     /**
      * Creates a new set of access en refresh tokens
      *
-     * @param $user_id
+     * @param integer$user_id
+     * @param string $user_ip
      *
      * @return array
      */
-    public static function issue($user_id)
+    public static function issue($user_id, $user_ip)
     {
         return [
-            'access_token' =>JWTHelper::issueAccessToken($user_id),
+            'access_token' =>JWTHelper::issueAccessToken($user_id, $user_ip),
             'refresh_token' =>  JWTHelper::issueRefreshToken($user_id)
         ];
     }
@@ -28,11 +46,12 @@ class JWTHelper {
     /**
      * Refreshes the access_token, and provides a new refresh_token
      *
-     * @param $refresh_token
+     * @param string $refresh_token
+     * @param string $user_ip
      *
      * @return bool|array
      */
-    public static function refresh($refresh_token)
+    public static function refresh($refresh_token, $user_ip)
     {
         $user_id = JWTHelper::validateRefreshToken($refresh_token);
 
@@ -42,25 +61,26 @@ class JWTHelper {
 
         JWTHelper::revokeRefreshToken($refresh_token);
 
-        return JWTHelper::issue($user_id);
+        return JWTHelper::issue($user_id, $user_ip);
     }
 
     /**
      * Checks if access_token is valid
      * If valid returns the token payload
      *
-     * @param $access_token
+     * @param string $access_token
+     * @param string $user_ip
      *
      * @return object
      */
-    public function authenticate($access_token) {
-        return JWTHelper::validateAccessToken($access_token);
+    public static function authenticate($access_token, $user_ip) {
+        return JWTHelper::validateAccessToken($access_token, $user_ip);
     }
 
     /**
      * Logs user out
      *
-     * @param $refresh_token
+     * @param string $refresh_token
      *
      * @return bool|null
      */
@@ -76,15 +96,16 @@ class JWTHelper {
     /**
      * Validates a access_token
      *
-     * @param null|string $access_token
+     * @param string $access_token
+     * @param string $user_ip
      *
      * @return object
      */
-    private static function validateAccessToken($access_token = null) {
+    private static function validateAccessToken($access_token, $user_ip) {
         if (!$access_token) {
             return (object) [
                 'error' => 'Access_token not provided.',
-                'http' => 401
+                'http' => 400
             ];
         }
 
@@ -93,12 +114,19 @@ class JWTHelper {
         } catch (ExpiredException $error) {
             return (object) [
                 'error' => 'Access_token has expired.',
-                'http' => 400
+                'http' => 401
             ];
         } catch (Exception $error) {
             return (object) [
                 'error' => 'Access_token has invalid signature.',
-                'http' => 400
+                'http' => 401
+            ];
+        }
+
+        if ($user_ip !== $credentials->sub_ip) {
+            return (object) [
+                'error' => 'Origin IP doesnt match sub_ip',
+                'http' => 401
             ];
         }
 
@@ -108,11 +136,11 @@ class JWTHelper {
     /**
      * Validates a refresh_token
      *
-     * @param null|string $refresh_token
+     * @param string $refresh_token
      *
      * @return bool|integer
      */
-    private static function validateRefreshToken($refresh_token = null) {
+    private static function validateRefreshToken($refresh_token) {
         if (!$refresh_token) {
             return false;
         }
@@ -129,14 +157,16 @@ class JWTHelper {
     /**
      * Creates an access_token for a user
      *
-     * @param $user_id
+     * @param integer $user_id
+     * @param string $user_ip
      *
      * @return string
      */
-    private static function issueAccessToken($user_id) {
+    private static function issueAccessToken($user_id, $user_ip) {
         $payload = [
             'iss' => env('APP_URL'),
             'sub' => $user_id,
+            'sub_ip' => $user_ip,
             'iat' => time(),
             'exp' => time() + config('JWT.ttl.access_token')
         ];
@@ -149,7 +179,7 @@ class JWTHelper {
     /**
      * Creates an refresh_token for a user
      *
-     * @param $user_id
+     * @param integer $user_id
      *
      * @return string
      */
@@ -168,7 +198,7 @@ class JWTHelper {
     /**
      * Revoke a refresh_token
      *
-     * @param $refresh_token
+     * @param string $refresh_token
      *
      * @return bool|null
      */

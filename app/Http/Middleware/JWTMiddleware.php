@@ -8,17 +8,6 @@ use App\Http\Helper\JWTHelper;
 use Illuminate\Http\Request;
 
 class JWTMiddleware {
-
-    /**
-     * Add JWTHelper so it can be accessed
-     *
-     * @param JWTHelper   $jwt
-     */
-    public function __construct(JWTHelper $jwt)
-    {
-        $this->jwt = $jwt;
-    }
-
     /**
      * Validate JWT token
      *
@@ -29,9 +18,10 @@ class JWTMiddleware {
      */
     public function handle(Request $request, Closure $next)
     {
-        $access_token = $this->parseAuthHeader($request);
-        $credentials = $this->jwt->authenticate($access_token);
+        $access_token = JWTHelper::parseAuthHeader($request);
+        $credentials = JWTHelper::authenticate($access_token, $request->ip());
 
+        // Returns an error message for an invalid token
         if (isset($credentials->error)) {
             $http_code = $credentials->http;
             unset($credentials->http);
@@ -43,23 +33,5 @@ class JWTMiddleware {
         $request->auth = $user;
 
         return $next($request);
-    }
-
-    /**
-     * Parse token from the authorization header
-     *
-     * @param Request   $request
-     *
-     * @return false|string
-     */
-    private function parseAuthHeader(Request $request)
-    {
-        $header_value = $request->headers->get('Authorization');
-
-        if (strpos($header_value, 'Bearer') === false) {
-            return false;
-        }
-
-        return trim(str_ireplace('Bearer', '', $header_value));
     }
 }

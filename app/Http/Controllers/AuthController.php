@@ -11,17 +11,7 @@ use App\Http\Helper\JWTHelper;
 
 class AuthController extends Controller {
     /**
-     * Add JWTHelper so it can be accessed
-     *
-     * @param JWTHelper   $jwt
-     */
-    public function __construct(JWTHelper $jwt)
-    {
-        $this->jwt = $jwt;
-    }
-
-    /**
-     * Authenticate a user and return the token if the provided credentials are correct.
+     * Authenticate a user
      *
      * @param Request $request
      *
@@ -31,7 +21,7 @@ class AuthController extends Controller {
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -41,31 +31,46 @@ class AuthController extends Controller {
         // Validate user credentials
         if (!$user || !Hash::check($request->get('password'), $user->password)) {
             return response()->json([
-                'error' => 'Email or password is wrong.',
+                'error' => 'Email or password is wrong.'
             ], 400);
         }
 
-        // Return token for successful auth
-        return response()->json($this->jwt->issue($user->id), 200);
+        // Return tokens for successful auth
+        return response()->json(JWTHelper::issue($user->id, $request->ip()), 200);
     }
 
+    /**
+     * Refreshes the access_token
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
+     */
     public function refresh(Request $request) {
         $this->validate($request, [
-            'refresh_token'    => 'required'
+            'refresh_token' => 'required'
         ]);
 
         // Return a new access_token and refresh_token
-        return response()->json($this->jwt->refresh($request->get('refresh_token')));
+        return response()->json(JWTHelper::refresh($request->get('refresh_token'), $request->ip()));
     }
 
+    /**
+     * Revoke the refresh_token
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
+     */
     public function logout(Request $request) {
         $this->validate($request, [
-            'refresh_token'    => 'required'
+            'refresh_token' => 'required'
         ]);
 
-        // Returns true for successful logout
         return response()->json([
-            'logout_success' => $this->jwt->logout($request->get('refresh_token'))
+            'success' => JWTHelper::logout($request->get('refresh_token'))
         ]);
     }
 }
