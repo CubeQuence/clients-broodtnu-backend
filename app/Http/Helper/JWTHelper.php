@@ -5,6 +5,7 @@ namespace App\Http\Helper;
 use App\RefreshToken;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
 
@@ -62,11 +63,11 @@ class JWTHelper {
 
         try {
             $credentials = JWT::decode($access_token, config('JWT.public_key'), [config('JWT.algorithm')]);
-        } catch (ExpiredException $e) {
+        } catch (ExpiredException $error) {
             return response()->json([
                 'error' => 'Provided token is expired.'
             ], 400);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
             return response()->json([
                 'error' => 'An error while decoding token.'
             ], 400);
@@ -108,7 +109,7 @@ class JWTHelper {
         $refresh_token = new RefreshToken();
 
         $refresh_token->user_id = $user_id;
-        $refresh_token->refresh_token = 'RANDOM_TOKEN';
+        $refresh_token->refresh_token = Str::random(32);
         $refresh_token->expires_at = time() + config('JWT.ttl.refresh_token');
 
         $refresh_token->save();

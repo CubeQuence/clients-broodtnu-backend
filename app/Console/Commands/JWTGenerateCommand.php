@@ -60,5 +60,7 @@ class JWTGenerateCommand extends Command
         file_put_contents($path, str_replace(
             'JWT_PUBLIC_KEY="' . env('JWT_PUBLIC_KEY') . '"', 'JWT_PUBLIC_KEY="' . str_replace(["\r","\n"],'||',$key['publickey']) . '"', file_get_contents($path)
         ));
+
+        return;
     }
 }

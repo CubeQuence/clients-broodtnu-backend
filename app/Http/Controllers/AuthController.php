@@ -49,9 +49,23 @@ class AuthController extends Controller {
         return response()->json($this->jwt->issue($user->id), 200);
     }
 
-    // refresh function
-    // call JWT refresh
+    public function refresh(Request $request) {
+        $this->validate($request, [
+            'refresh_token'    => 'required'
+        ]);
 
-    // logout function
-    // call jwt logout function
+        // Return a new access_token and refresh_token
+        return response()->json($this->jwt->refresh($request->get('refresh_token')));
+    }
+
+    public function logout(Request $request) {
+        $this->validate($request, [
+            'refresh_token'    => 'required'
+        ]);
+
+        // Returns true for successful logout
+        return response()->json([
+            'logout_success' => $this->jwt->logout($request->get('refresh_token'))
+        ]);
+    }
 }
