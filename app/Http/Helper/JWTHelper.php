@@ -105,7 +105,7 @@ class JWTHelper {
         if (!$access_token) {
             return (object) [
                 'error' => 'Access_token not provided.',
-                'http' => 400
+                'http' => 401
             ];
         }
 

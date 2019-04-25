@@ -36,18 +36,12 @@ $router->post('/auth/refresh', 'AuthController@refresh');
 
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
-    // GET /users - Display list of users
-    $router->get('/users', 'UserController@showAll');
+    // GET /user - View Account
+    $router->get('/user', 'UserController@view');
 
-    // GET /users/:id - Display specific user
-    $router->get('/users/{id}', 'UserController@showOne');
+    // PUT /user - Update Account
+    $router->put('/user', 'UserController@update');
 
-    // POST /users/:id - Create user
-    $router->post('/users', 'UserController@create');
-
-    // PUT /users/:id - Edit user
-    $router->put('/users/{id}', 'UserController@update');
-
-    // DELETE /users/:id - Delete user
-    $router->delete('/users/{id}', 'UserController@delete');
+    // DELETE /user - Delete Account
+    $router->delete('/user', 'UserController@delete');
 });

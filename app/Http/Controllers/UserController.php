@@ -4,43 +4,50 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Laravel\Lumen\Http\ResponseFactory;
 
 class UserController extends Controller
 {
-    public function showAll()
+
+    /**
+     * View user account
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function view(Request $request)
     {
-        return response()->json(User::all());
+        return response()->json(User::findOrFail($request->auth->id));
     }
 
-    public function showOne($id)
+    /**
+     * Update user account
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function update(Request $request)
     {
-        return response()->json(User::findOrFail($id));
-    }
-
-    public function create(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'address' => 'required|alpha'
-        ]);
-
-        $user = User::create($request->all());
-
-        return response()->json($user, 201);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($request->auth->id);
         $user->update($request->all());
 
         return response()->json($user, 200);
     }
 
-    public function delete($id)
+    /**
+     * Delete user account
+     *
+     * @param Request $request
+     *
+     * @return Response|ResponseFactory
+     */
+    public function delete(Request $request)
     {
-        User::findOrFail($id)->delete();
+        User::findOrFail($request->auth->id)->delete();
 
         return response(null, 204);
     }
