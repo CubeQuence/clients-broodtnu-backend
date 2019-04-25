@@ -31,12 +31,13 @@ class AuthController extends Controller {
         // Validate user credentials
         if (!$user || !Hash::check($request->get('password'), $user->password)) {
             return response()->json([
-                'error' => 'Email or password is wrong.'
+                'error' => 'Email or password is wrong.',
+                'ip' => $request->ip()
             ], 400);
         }
 
         // Return tokens for successful auth
-        return response()->json(JWTHelper::issue($user->id, $request->ip()), 200);
+        return response()->json(JWTHelper::issue($user->id, $request->getClientIp()), 200);
     }
 
     /**
@@ -53,7 +54,7 @@ class AuthController extends Controller {
         ]);
 
         // Return a new access_token and refresh_token
-        return response()->json(JWTHelper::refresh($request->get('refresh_token'), $request->ip()));
+        return response()->json(JWTHelper::refresh($request->get('refresh_token'), $request->getClientIp()));
     }
 
     /**

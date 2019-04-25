@@ -19,7 +19,7 @@ class JWTMiddleware {
     public function handle(Request $request, Closure $next)
     {
         $access_token = JWTHelper::parseAuthHeader($request);
-        $credentials = JWTHelper::authenticate($access_token, $request->ip());
+        $credentials = JWTHelper::authenticate($access_token, $request->getClientIp());
 
         // Returns an error message for an invalid token
         if (isset($credentials->error)) {
