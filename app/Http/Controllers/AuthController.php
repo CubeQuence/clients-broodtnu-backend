@@ -3,40 +3,39 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
+use App\Http\Helper\JWTHelper;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use App\Http\Helper\JWTHelper;
 
 class AuthController extends Controller {
     /**
-     * Authenticate a user
+     * Login user and return tokens
      *
      * @param Request $request
      *
      * @return mixed
-     * @throws ValidationException
+     * @throws
      */
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email',
+            'email'    => 'required|email|max:255',
             'password' => 'required',
         ]);
 
-        // Find the user by email
-        $user = User::where('email', $request->get('email'))->first();
+        $user = User::select('id', 'password')->where('email', $request->get('email'))->first();
 
-        // Validate user credentials
         if (!$user || !Hash::check($request->get('password'), $user->password)) {
-            return response()->json([
-                'error' => 'Email or password is wrong.'
-            ], 401);
+            return $this->respond([
+                'errors' => [
+                    'email or password' => ['is invalid'],
+                ]
+            ], 422);
         }
 
-        // Return tokens for successful auth
         return response()->json(JWTHelper::issue($user->id, $request->ip()), 200);
     }
 
@@ -46,7 +45,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws
      */
     public function refresh(Request $request) {
         $this->validate($request, [
@@ -63,7 +62,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws
      */
     public function logout(Request $request) {
         $this->validate($request, [
@@ -81,16 +80,16 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws
      */
-    public function signUp(Request $request) {
+    public function register(Request $request) {
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
             'address' => 'required|alpha'
         ]);
 
-        //add captcha
+        // TODO: add captcha
 
         $user = User::create($request->all());
 

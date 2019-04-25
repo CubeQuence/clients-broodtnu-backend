@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\User;
+use App\Models\User;
 use App\Http\Helper\JWTHelper;
 use Illuminate\Http\Request;
 

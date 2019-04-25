@@ -2,7 +2,7 @@
 
 namespace App\Http\Helper;
 
-use App\RefreshToken;
+use App\Models\RefreshToken;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Firebase\JWT\JWT;

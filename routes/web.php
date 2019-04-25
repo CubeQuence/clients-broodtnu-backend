@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
     ];
 });
 
-$router->get('/ping', function () use ($router) {
+$router->get('ping', function () use ($router) {
     return [
         'time' => date('Y-m-d H:i:s'),
         'message' => 'pong'
@@ -25,23 +25,20 @@ $router->get('/ping', function () use ($router) {
 });
 
 
-// POST /auth/login - Login with email and password
-$router->post('/auth/login', 'AuthController@login');
-
-// POST /auth/logout - Revoke refresh token
-$router->post('/auth/logout', 'AuthController@logout');
-
-// POST /auth/refresh - Refreshes access_token
-$router->post('/auth/refresh', 'AuthController@refresh');
+/**
+ * Authentication
+ */
+$router->post('auth/login', 'AuthController@login');
+$router->post('auth/logout', 'AuthController@logout');
+$router->post('auth/refresh', 'AuthController@refresh');
+$router->post('auth/register', 'AuthController@register');
 
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
-    // GET /user - View Account
-    $router->get('/user', 'UserController@view');
-
-    // PUT /user - Update Account
-    $router->put('/user', 'UserController@update');
-
-    // DELETE /user - Delete Account
-    $router->delete('/user', 'UserController@delete');
+    /**
+     * Current User
+     */
+    $router->get('user', 'UserController@view');
+    $router->put('user', 'UserController@update');
+    $router->delete('user', 'UserController@delete');
 });

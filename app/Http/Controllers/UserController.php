@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
-use Laravel\Lumen\Http\ResponseFactory;
 
 class UserController extends Controller
 {
@@ -43,12 +41,12 @@ class UserController extends Controller
      *
      * @param Request $request
      *
-     * @return Response|ResponseFactory
+     * @return JsonResponse
      */
     public function delete(Request $request)
     {
         User::findOrFail($request->auth->id)->delete();
 
-        return response(null, 204);
+        return response()->json(null, 204);
     }
 }
