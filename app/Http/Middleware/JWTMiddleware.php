@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\User;
-use App\Http\Helper\JWTHelper;
+use App\Http\Helpers\JWTHelper;
 use Illuminate\Http\Request;
 
 class JWTMiddleware {

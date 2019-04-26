@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\RefreshToken;
+use App\Http\Helpers\JWTHelper;
 use App\Http\Validators\ValidatesUserRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json(User::find($request->user->id));
+        return response()->json(User::findOrFail($request->user->id));
     }
 
     /**
@@ -37,13 +38,18 @@ class UserController extends Controller
     {
         $this->validateUpdate($request);
 
-        $user = User::find($request->user->id);
+        $user = User::findOrFail($request->user->id);
         $user->update([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->input('password'))
         ]);
         $user->save();
+
+        // TODO: check if user changed password
+        if (false) {
+            JWTHelper::revokeAllRefreshTokens($user->id);
+        }
 
         return response()->json($user, 200);
     }
@@ -57,8 +63,8 @@ class UserController extends Controller
      */
     public function delete(Request $request)
     {
-        RefreshToken::where('user_id', $request->user->id);
-        User::find($request->user->id)->delete();
+        JWTHelper::revokeAllRefreshTokens($request->user->id);
+        User::findOrFail($request->user->id)->delete();
 
         return response()->json(null, 204);
     }

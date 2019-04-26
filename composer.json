@@ -1,12 +1,11 @@
 {
-  "name": "laravel/lumen",
-  "description": "The Laravel Lumen Framework.",
+  "name": "Broodt_Nu-Backend",
+  "description": "The backend for Broodt Nu",
   "keywords": [
-    "framework",
-    "laravel",
-    "lumen"
+    "Broodt Nu",
+    "Broodt"
   ],
-  "license": "MIT",
+  "license": "",
   "type": "project",
   "require": {
     "php": ">=7.1.3",

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Helper\JWTHelper;
-use App\Http\Helper\CaptchaHelper;
+use App\Http\Helpers\JWTHelper;
+use App\Http\Helpers\CaptchaHelper;
 use App\Http\Validators\ValidatesAuthRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +84,7 @@ class AuthController extends Controller {
         }
 
         $this->validateRegister($request);
-        
+
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),

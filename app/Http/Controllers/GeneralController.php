@@ -39,7 +39,8 @@ class GeneralController extends Controller {
     public function meta()
     {
         return response()->json([
-            'captcha_key' => config('captcha.public_key')
+            'captcha_public_key' => config('captcha.public_key'),
+            'jwt_public_key' => config('JWT.public_key')
         ], 200);
     }
 }

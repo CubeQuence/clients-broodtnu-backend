@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Helper;
+namespace App\Http\Helpers;
 
 use App\Models\RefreshToken;
 use Illuminate\Support\Str;
@@ -164,7 +164,8 @@ class JWTHelper {
      */
     private static function issueAccessToken($user_id, $user_ip) {
         $payload = [
-            'iss' => env('APP_URL'),
+            'iss' => config('JWT.iss'),
+            'aud' => config('JWT.aud'),
             'sub' => $user_id,
             'sub_ip' => $user_ip,
             'iat' => time(),
@@ -204,5 +205,17 @@ class JWTHelper {
      */
     private static function revokeRefreshToken($refresh_token) {
         return RefreshToken::where('refresh_token', $refresh_token)->delete();
+    }
+
+    /**
+     * Delete all refresh_tokens of a user,
+     * For example a password change, or deleted account
+     *
+     * @param $user_id
+     *
+     * @return mixed
+     */
+    public static function revokeAllRefreshTokens($user_id) {
+        return RefreshToken::where('user_id', $user_id)->delete();
     }
 }
