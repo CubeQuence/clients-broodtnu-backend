@@ -46,6 +46,7 @@ trait ValidatesAuthRequests
     protected function validateRegister(Request $request)
     {
         $this->validate($request, [
+            'captcha_response' => 'required',
             'name' => 'required|max:50|alpha_num',
             'email'    => 'required|max:255|email|unique:users,email',
             'password' => 'required|min:8',

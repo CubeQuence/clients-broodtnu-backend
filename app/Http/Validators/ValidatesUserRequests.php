@@ -16,7 +16,7 @@ trait ValidatesUserRequests
      */
     protected function validateUpdate(Request $request)
     {
-        if ($request->user()->email === $request->input('email')) {
+        if ($request->user->email === $request->input('email')) {
             $email_rule = 'email';
         } else {
             $email_rule = 'sometimes|max:255|email|unique:users,email';

@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 class JSONMiddleware {
 
     /**
-     * If requests contains JSON interpret it
+     * If POST,PUT,PATCH requests contains JSON interpret it
+     * Also validate that the provided JSON is valid
      *
      * @param Request $request
      * @param Closure $next
@@ -18,7 +19,21 @@ class JSONMiddleware {
 
     public function handle(Request $request, Closure $next)
     {
-        if ($request->isJson()) {
+        if (in_array($request->method(), ['POST', 'PUT', 'PATCH'])) {
+            if (!$request->isJson()) {
+                return response()->json([
+                    'error' => 'Body should be a JSON object'
+                ], 400);
+            }
+
+            json_decode($request->getContent());
+
+            if ((json_last_error() !== JSON_ERROR_NONE)) {
+                return response()->json([
+                    'error' => 'Problems parsing JSON'
+                ], 400);
+            }
+
             $data = $request->json()->all();
             $request->request->replace(is_array($data) ? $data : []);
         }

@@ -32,7 +32,7 @@ class AuthController extends Controller {
                 'errors' => [
                     'email or password' => ['is invalid'],
                 ]
-            ], 422);
+            ], 401);
         }
 
         return response()->json(JWTHelper::issue($user->id, $request->ip()), 200);
@@ -77,13 +77,13 @@ class AuthController extends Controller {
      * @throws
      */
     public function register(Request $request) {
+        $this->validateRegister($request);
+
         if (!CaptchaHelper::validate($request->get('captcha_response'))) {
             return response()->json([
                 'error' => 'invalid captcha'
             ], 401);
         }
-
-        $this->validateRegister($request);
 
         $user = User::create([
             'name' => $request->get('name'),

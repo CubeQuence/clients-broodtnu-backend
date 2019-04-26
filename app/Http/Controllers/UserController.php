@@ -46,8 +46,8 @@ class UserController extends Controller
         ]);
         $user->save();
 
-        // TODO: check if user changed password
-        if (false) {
+        // If user resets password revoke all refresh_tokens
+        if ($request->input('password')) {
             JWTHelper::revokeAllRefreshTokens($user->id);
         }
 
