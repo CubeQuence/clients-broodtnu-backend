@@ -12,7 +12,7 @@
 */
 
 /**
- * Factory definition for model App\User.
+ * Factory definition for model App\Models\User.
  */
 $factory->define(App\Models\User::class, function ($faker) {
     return [
