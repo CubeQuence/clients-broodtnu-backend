@@ -61,6 +61,8 @@ class JWTGenerateCommand extends Command
             'JWT_PUBLIC_KEY="' . env('JWT_PUBLIC_KEY') . '"', 'JWT_PUBLIC_KEY="' . str_replace(["\r","\n"],'||',$key['publickey']) . '"', file_get_contents($path)
         ));
 
+        $this->info('JWT keypair set successfully.');
+
         return;
     }
 }
