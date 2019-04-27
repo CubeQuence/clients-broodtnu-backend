@@ -14,7 +14,7 @@
 /**
  * Factory definition for model App\User.
  */
-$factory->define(App\User::class, function ($faker) {
+$factory->define(App\Models\User::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
