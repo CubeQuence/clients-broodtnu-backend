@@ -20,7 +20,6 @@ $factory->define(App\Models\User::class, function ($faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => app('hash')->make('test'),
 
-        //'active' => $faker->boolean,
         //'address' => $faker->address
     ];
 });

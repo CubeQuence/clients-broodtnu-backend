@@ -14,15 +14,15 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
 
-            //$table->boolean('active')->default(true);
-            //$table->string('address');
-
+            $table->string('reset_password_token', 100)->nullable()->unique();
+            $table->string('verify_email_token', 100)->nullable()->unique();
+            
             $table->timestamps();
         });
     }
 
     public static function down()
     {
-        Schema::drop('users');
+        Schema::dropIfExists('users');
     }
 }

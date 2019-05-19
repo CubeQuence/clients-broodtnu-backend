@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\RefreshToken;
 use App\Http\Helpers\JWTHelper;
+use App\Http\Helpers\HttpStatusCodes;
 use App\Http\Validators\ValidatesUserRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +24,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json(User::findOrFail($request->user->id));
+        return response()->json(
+            User::findOrFail($request->user->id),
+            HttpStatusCodes::SUCCESS_OK
+        );
     }
 
     /**
@@ -52,7 +56,10 @@ class UserController extends Controller
             JWTHelper::revokeAllRefreshTokens($user->id);
         }
 
-        return response()->json($user, 200);
+        return response()->json
+            $user,
+            HttpStatusCodes::SUCCESS_OK
+        );
     }
 
     /**
@@ -67,6 +74,9 @@ class UserController extends Controller
         JWTHelper::revokeAllRefreshTokens($request->user->id);
         User::findOrFail($request->user->id)->delete();
 
-        return response()->json(null, 204);
+        return response()->json(
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
+        );
     }
 }

@@ -17,6 +17,11 @@ class CaptchaHelper {
      * @throws GuzzleException
      */
    public static function validate($captcha_response) {
+
+      if ($this->app->environment() !== 'production') {
+            return true;
+      }
+
        $guzzle_client = new Client();
 
        $response = $guzzle_client->request('POST', config('captcha.endpoint'), [

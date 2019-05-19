@@ -11,6 +11,19 @@
 |
 */
 
+/**
+ * Testing
+ */
+$router->get('mail/request_reset', function () {
+    $user = App\Models\User::find(1);
+	return new App\Mail\RequestResetPassword($user);
+});
+
+$router->get('mail/verify', function () {
+	$user = App\Models\User::find(1);
+	return new App\Mail\RegisterConfirmation($user);
+});
+
 
 /**
  * General
@@ -27,6 +40,10 @@ $router->post('auth/login', 'AuthController@login');
 $router->post('auth/logout', 'AuthController@logout');
 $router->post('auth/register', 'AuthController@register');
 $router->post('auth/refresh', 'AuthController@refresh');
+
+$router->post('auth/reset_request', 'AuthController@requestResetPassword');
+$router->post('auth/reset', 'AuthController@resetPassword');
+$router->post('auth/verify', 'AuthController@verifyEmail');
 
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
