@@ -14,7 +14,7 @@ class RegisterConfirmation extends Mailable
      *
      * @return void
      */
-    public function __construct(array $user)
+    public function __construct($user)
     {
         $this->user = $user;
     }
@@ -26,7 +26,7 @@ class RegisterConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->view(
+        return $this->markdown(
             'mail.RegisterConfirmation',
             [
                 'verifyEmailUrl' => env('APP_DOMAIN') . '/auth/verify/' . $this->user->verify_email_token

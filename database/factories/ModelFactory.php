@@ -16,7 +16,6 @@
  */
 $factory->define(App\Models\User::class, function ($faker) {
     return [
-    	'active' => $faker->boolean,
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => app('hash')->make('test'),
