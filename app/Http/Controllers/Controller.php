@@ -13,6 +13,7 @@ class Controller extends BaseController {
      * @param $data
      * @param int $statusCode
      * @param array $headers
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respond($data, $statusCode = 200, $headers = [])

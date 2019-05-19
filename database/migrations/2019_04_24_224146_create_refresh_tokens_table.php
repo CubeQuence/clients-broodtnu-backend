@@ -11,7 +11,7 @@ class CreateRefreshTokensTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public static function up()
     {
         Schema::create('refresh_tokens', function (Blueprint $table) {
             $table->increments('id');
@@ -27,7 +27,7 @@ class CreateRefreshTokensTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public static function down()
     {
         Schema::dropIfExists('refresh_tokens');
     }

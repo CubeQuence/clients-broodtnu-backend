@@ -23,6 +23,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return mixed
+     *
      * @throws
      */
     public function login(Request $request)
@@ -62,6 +63,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function refresh(Request $request) {
@@ -82,6 +84,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function logout(Request $request) {
@@ -101,10 +104,11 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function register(Request $request) {
-        $this->validateRegister($request);
+        $this->validateRegisterPreCaptcha($request);
 
         if (!CaptchaHelper::validate($request->get('captcha_response'))) {
             return response()->json(
@@ -115,7 +119,7 @@ class AuthController extends Controller {
             );
         }
 
-        Mail::to($request->get('email'))->send(new RegisterConfirmation());
+        $this->validateRegisterPostCaptcha($request);
 
         $user = User::create([
             'name' => $request->get('name'),
@@ -123,6 +127,8 @@ class AuthController extends Controller {
             'password' => Hash::make($request->input('password')),
             'verify_email_token' => str_random(128)
         ]);
+      
+        Mail::to($request->get('email'))->send(new RegisterConfirmation());
 
         return response()->json(
             $user,

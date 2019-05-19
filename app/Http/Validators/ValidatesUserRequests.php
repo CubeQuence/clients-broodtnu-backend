@@ -3,7 +3,6 @@
 namespace App\Http\Validators;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 trait ValidatesUserRequests
 {
@@ -11,8 +10,6 @@ trait ValidatesUserRequests
      * Validate user info update
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validateUpdate(Request $request)
     {
