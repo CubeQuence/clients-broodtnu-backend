@@ -32,6 +32,7 @@ class UserController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function update(Request $request)

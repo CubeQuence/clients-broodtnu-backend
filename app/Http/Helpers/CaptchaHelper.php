@@ -13,6 +13,7 @@ class CaptchaHelper {
      * @param $captcha_response
      *
      * @return bool
+     *
      * @throws GuzzleException
      */
    public static function validate($captcha_response) {

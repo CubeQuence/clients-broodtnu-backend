@@ -19,6 +19,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return mixed
+     *
      * @throws
      */
     public function login(Request $request)
@@ -44,6 +45,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function refresh(Request $request) {
@@ -58,6 +60,7 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function logout(Request $request) {
@@ -74,16 +77,19 @@ class AuthController extends Controller {
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws
      */
     public function register(Request $request) {
-        $this->validateRegister($request);
+        $this->validateRegisterPreCaptcha($request);
 
         if (!CaptchaHelper::validate($request->get('captcha_response'))) {
             return response()->json([
                 'error' => 'invalid captcha'
             ], 401);
         }
+
+        $this->validateRegisterPostCaptcha($request);
 
         $user = User::create([
             'name' => $request->get('name'),
