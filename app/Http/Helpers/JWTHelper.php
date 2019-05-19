@@ -30,7 +30,7 @@ class JWTHelper {
     /**
      * Creates a new set of access en refresh tokens
      *
-     * @param integer$user_id
+     * @param int $user_id
      * @param string $user_ip
      *
      * @return array
@@ -138,7 +138,7 @@ class JWTHelper {
      *
      * @param string $refresh_token
      *
-     * @return bool|integer
+     * @return bool|int
      */
     private static function validateRefreshToken($refresh_token) {
         if (!$refresh_token) {
@@ -157,7 +157,7 @@ class JWTHelper {
     /**
      * Creates an access_token for a user
      *
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $user_ip
      *
      * @return string
@@ -172,15 +172,13 @@ class JWTHelper {
             'exp' => time() + config('JWT.ttl.access_token')
         ];
 
-        $access_token = JWT::encode($payload, config('JWT.private_key'), config('JWT.algorithm'));
-
-        return $access_token;
+        return JWT::encode($payload, config('JWT.private_key'), config('JWT.algorithm'));
     }
 
     /**
      * Creates an refresh_token for a user
      *
-     * @param integer $user_id
+     * @param int $user_id
      *
      * @return string
      */
