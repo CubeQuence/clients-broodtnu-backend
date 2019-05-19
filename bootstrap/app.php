@@ -37,6 +37,22 @@ $app->withEloquent();
 $app->configure('captcha');
 $app->configure('CORS');
 $app->configure('JWT');
+$app->configure('mail');
+$app->configure('services');
+
+
+/*
+|--------------------------------------------------------------------------
+| Set aliasses
+|--------------------------------------------------------------------------
+|
+| Here, the aliasses are set.
+|
+*/
+
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -90,8 +106,10 @@ $app->routeMiddleware([
 |
 */
 
-$app->register(App\Providers\AppServiceProvider::class);
-//$app->register(App\Providers\EventServiceProvider::class);
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+// $app->register(App\Providers\AppServiceProvider::class);
+// $app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

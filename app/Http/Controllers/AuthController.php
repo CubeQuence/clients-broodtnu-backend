@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Mail\RegisterConfirmation;
+use App\Mail\ForgotPassword;
 use App\Http\Helpers\JWTHelper;
 use App\Http\Helpers\CaptchaHelper;
+use App\Http\Helpers\HttpStatusCodes;
 use App\Http\Validators\ValidatesAuthRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller {
     use ValidatesAuthRequests;
@@ -32,10 +36,24 @@ class AuthController extends Controller {
                 'errors' => [
                     'email or password' => ['is invalid'],
                 ]
-            ], 401);
+            ], HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED);
         }
 
-        return response()->json(JWTHelper::issue($user->id, $request->ip()), 200);
+        if ($user->verify_email_token !== null) {
+            return $this->respond([
+                'errors' => [
+                    'account' => ['not active'],
+                ]
+            ], HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED);
+        }
+
+        return response()->json(
+            JWTHelper::issue(
+                $user->id,
+                $request->ip()
+            ),
+            HttpStatusCodes::SUCCESS_OK
+        );
     }
 
     /**
@@ -49,7 +67,13 @@ class AuthController extends Controller {
     public function refresh(Request $request) {
         $this->validateRefreshToken($request);
 
-        return response()->json(JWTHelper::refresh($request->get('refresh_token'), $request->ip()));
+        return response()->json(
+            JWTHelper::refresh(
+                $request->get('refresh_token'),
+                $request->ip()
+            ),
+            HttpStatusCodes::SUCCESS_OK
+        );
     }
 
     /**
@@ -63,9 +87,12 @@ class AuthController extends Controller {
     public function logout(Request $request) {
         $this->validateRefreshToken($request);
 
-        return response()->json([
-            'success' => (bool) JWTHelper::logout($request->get('refresh_token'))
-        ]);
+        return response()->json(
+            [
+                'success' => (bool) JWTHelper::logout($request->get('refresh_token'))
+            ],
+            HttpStatusCodes::SUCCESS_OK
+        );
     }
 
     /**
@@ -80,17 +107,109 @@ class AuthController extends Controller {
         $this->validateRegister($request);
 
         if (!CaptchaHelper::validate($request->get('captcha_response'))) {
-            return response()->json([
-                'error' => 'invalid captcha'
-            ], 401);
+            return response()->json(
+                [
+                    'error' => 'invalid captcha'
+                ],
+                HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED
+            );
         }
+
+        Mail::to($request->get('email'))->send(new RegisterConfirmation());
 
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->input('password'))
+            'password' => Hash::make($request->input('password')),
+            'verify_email_token' => str_random(128)
         ]);
 
-        return response()->json($user, 201);
+        return response()->json(
+            $user,
+            HttpStatusCodes::SUCCESS_CREATED
+        );
+    }
+
+    /**
+     * Request an reset password email
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws
+     */
+    public function requestResetPassword(Request $request) {
+        $this->validateRequestPasswordReset($request);
+
+        $user = User::where(
+            'email',
+            $request->input('email')
+        )->first();
+
+        $user->reset_password_token = str_random(100);
+
+        $user->save();
+
+        Mail::to($request->get('email'))->send(new RequestResetPassword($user));
+
+        return response()->json(
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
+        );
+    }
+
+    /**
+     * Confirm a password reset
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws
+     */
+    public function resetPassword(Request $request) {
+        $this->validatePasswordReset($request);
+
+        $user = User::where(
+            'reset_password_token',
+            $request->input('reset_password_token')
+        )->first();
+
+        $user->password = Hash::make($request->input('password'));
+        
+        $user->reset_password_token = null;
+
+        $user->save();
+
+        return response()->json(
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
+        );
+    }
+
+
+    /**
+     * Verify user email and activate account
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws
+     */
+    public function verifyEmail(Request $request) {
+        $this->validateVerifyEmailToken($request);
+
+        $user = User::where(
+            'verify_email_token',
+            $request->input('verify_email_token')
+        )->first();
+        
+        $user->verify_email_token = null;
+        
+        $user->save();
+
+        return response()->json(
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
+        );
     }
 }

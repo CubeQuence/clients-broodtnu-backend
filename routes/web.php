@@ -28,6 +28,10 @@ $router->post('auth/logout', 'AuthController@logout');
 $router->post('auth/register', 'AuthController@register');
 $router->post('auth/refresh', 'AuthController@refresh');
 
+$router->post('auth/reset_request', 'AuthController@requestResetPassword');
+$router->post('auth/reset', 'AuthController@resetPassword');
+$router->post('auth/verify', 'AuthController@verifyEmail');
+
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
     /**

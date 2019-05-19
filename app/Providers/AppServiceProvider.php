@@ -13,11 +13,8 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        // Load WN Generator commands in dev mode (https://github.com/webNeat/lumen-generators)
-        if ($this->app->environment() == 'local') {
-            $this->app->register('Wn\Generators\CommandsServiceProvider');
+        if ($this->app->environment() !== 'production') {
+            //
         }
-
-        $this->app->register('Flipbox\LumenGenerator\LumenGeneratorServiceProvider');
     }
 }

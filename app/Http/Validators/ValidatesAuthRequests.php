@@ -52,4 +52,50 @@ trait ValidatesAuthRequests
             'password' => 'required|min:8',
         ]);
     }
+
+    /**
+     * Validate password reset request input
+     *
+     * @param  Request $request
+     *
+     * @throws ValidationException
+     */
+    protected function validateRequestPasswordReset(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        // TODO: add response "Password reset completed" or somethin as not to show if a user exists.
+    }
+
+    /**
+     * Validate password reset request input
+     *
+     * @param  Request $request
+     *
+     * @throws ValidationException
+     */
+    protected function validatePasswordReset(Request $request)
+    {
+        $this->validate($request, [
+            'reset_password_token' => 'required|exists:users,reset_password_token',
+            'password' => 'required'
+        ]);
+    }
+
+    /**
+     * Validate verify email request input
+     *
+     * @param  Request $request
+     *
+     * @throws ValidationException
+     */
+    protected function validateVerifyEmailToken(Request $request)
+    {
+        $this->validate($request, [
+            'verify_email_token' => 'required|exists:users,verify_email_token'
+        ]);
+    }
+
 }
