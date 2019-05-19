@@ -14,14 +14,14 @@
 /**
  * Testing
  */
-use App\Models\User;
-$user = User::find(1);
-$router->get('mail/forgot', function () {
-	return view('mail.RequestResetPassword', $user);
+$router->get('mail/request_reset', function () {
+    $user = App\Models\User::find(1);
+	return new App\Mail\RequestResetPassword($user);
 });
 
 $router->get('mail/verify', function () {
-	return view('mail.RegisterConfirmation', $user);
+	$user = App\Models\User::find(1);
+	return new App\Mail\RegisterConfirmation($user);
 });
 
 

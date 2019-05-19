@@ -6,15 +6,15 @@ use Illuminate\Mail\Mailable;
 
 class RequestResetPassword extends Mailable
 {
-	public $data;
+	public $user;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(array $data)
+    public function __construct($user)
     {
-        $this->data = $data;
+        $this->user = $user;
     }
 
     /**
@@ -24,7 +24,7 @@ class RequestResetPassword extends Mailable
      */
     public function build()
     {
-        return $this->view(
+        return $this->markdown(
             'mail.RequestResetPassword',
             [
                 'resetPasswordUrl' => env('APP_DOMAIN') . '/auth/reset/' . $this->user->verify_email_token
