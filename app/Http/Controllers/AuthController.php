@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Mail\RegisterConfirmation;
-use App\Mail\ForgotPassword;
+use App\Mail\RequestResetPassword;
 use App\Http\Helpers\JWTHelper;
 use App\Http\Helpers\CaptchaHelper;
 use App\Http\Helpers\HttpStatusCodes;

@@ -4,7 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 
-class ForgotPassword extends Mailable
+class RequestResetPassword extends Mailable
 {
 	public $data;
     /**
@@ -25,7 +25,7 @@ class ForgotPassword extends Mailable
     public function build()
     {
         return $this->view(
-            'mail.ForgotPassword',
+            'mail.RequestResetPassword',
             [
                 'resetPasswordUrl' => env('APP_DOMAIN') . '/auth/reset/' . $this->user->verify_email_token
             ]

@@ -11,6 +11,19 @@
 |
 */
 
+/**
+ * Testing
+ */
+use App\Models\User;
+$user = User::find(1);
+$router->get('mail/forgot', function () {
+	return view('mail.RequestResetPassword', $user);
+});
+
+$router->get('mail/verify', function () {
+	return view('mail.RegisterConfirmation', $user);
+});
+
 
 /**
  * General
