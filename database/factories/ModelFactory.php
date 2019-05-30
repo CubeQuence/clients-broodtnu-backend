@@ -33,7 +33,7 @@ $factory->define(App\Models\Product::class, function ($faker) {
         'description' => $faker->text(128),
         'img_url' => $faker->imageUrl(),
         'price' => $faker->randomFloat(2, 0.10, 3.50),
-        'tags' => [1, 2, 3],
-        'recommended_addons' => [14, 23],
+        'tags' => [$faker->numberBetween(0, 5), $faker->numberBetween(0, 5)],
+        'recommended_addons' => [$faker->numberBetween(0,25), $faker->numberBetween(0,25)],
     ];
 });

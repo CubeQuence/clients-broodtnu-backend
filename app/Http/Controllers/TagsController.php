@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Tag;
 use App\Http\Helpers\HttpStatusCodes;
 use Illuminate\Http\JsonResponse;
@@ -29,7 +30,7 @@ class TagsController extends Controller {
      * @return JsonResponse
      */
     public function show($id) {
-        $id = explode(',', $id);
+        $id = array_map('intval', explode(',', $id));
 
         return response()->json(
             Tag::findOrFail($id),
@@ -45,10 +46,10 @@ class TagsController extends Controller {
      * @return JsonResponse
      */
     public function showProducts($id) {
-//        $id = explode(',', $id);
+        $id = array_map('intval', explode(',', $id));
 
         return response()->json(
-            Tag::findOrFail($id)->products(),
+            Product::whereJsonContains('tags', $id)->get(),
             HttpStatusCodes::SUCCESS_OK
         );
     }

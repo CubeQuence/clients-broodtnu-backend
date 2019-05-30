@@ -22,12 +22,12 @@ class ProductsController extends Controller {
     /**
      * View product (multiple can be requested with comma's)
      *
-     * @param int
+     * @param string
      *
      * @return JsonResponse
      */
     public function show($id) {
-        $id = explode(',', $id);
+        $id = array_map('intval', explode(',', $id));
 
         return response()->json(
             Product::findOrFail($id),
