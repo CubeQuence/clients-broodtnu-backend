@@ -104,7 +104,7 @@ class JWTHelper {
     private static function validateAccessToken($access_token, $user_ip) {
         if (!$access_token) {
             return (object) [
-                'error' => 'Access_token not provided.',
+                'error' => 'access_token not provided.',
                 'http' => 401
             ];
         }
@@ -113,19 +113,19 @@ class JWTHelper {
             $credentials = JWT::decode($access_token, config('JWT.public_key'), [config('JWT.algorithm')]);
         } catch (ExpiredException $error) {
             return (object) [
-                'error' => 'Access_token has expired.',
+                'error' => 'access_token has expired.',
                 'http' => 401
             ];
         } catch (Exception $error) {
             return (object) [
-                'error' => 'Access_token has invalid signature.',
+                'error' => 'access_token has invalid signature.',
                 'http' => 401
             ];
         }
 
         if ($user_ip !== $credentials->sub_ip) {
             return (object) [
-                'error' => 'Origin IP doesnt match sub_ip',
+                'error' => 'origin IP doesnt match sub_ip',
                 'http' => 401
             ];
         }

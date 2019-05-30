@@ -4,18 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model {
+class Tag extends Model
+{
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass assignable
      *
      * @var array
      */
     protected $fillable = [
         'name',
-        'email',
-        'password',
-        'reset_password_token',
-        'verify_email_token'
+        'color'
     ];
 
     /**
@@ -34,16 +32,7 @@ class User extends Model {
      * @var array
      */
     protected $hidden = [
-        'password',
-        'reset_password_token',
-        'verify_email_token'
+        'created_at',
+        'updated_at',
     ];
-
-    /**
-     * Get all the refresh_tokens by the user.
-     */
-    public function refreshTokens()
-    {
-        return $this->hasMany(RefreshToken::class);
-    }
 }

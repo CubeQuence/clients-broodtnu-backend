@@ -27,4 +27,11 @@ class RefreshToken extends Model
         'updated_at',
         'expires_at'
     ];
+
+    /**
+     * Get the user of the refresh_token.
+     */
+    function user() {
+        return $this->hasOne(User::class);
+    }
 }

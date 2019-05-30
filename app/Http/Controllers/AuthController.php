@@ -91,9 +91,9 @@ class AuthController extends Controller {
         $this->validateRefreshToken($request);
 
         return response()->json(
-            [
-                'success' => (bool) JWTHelper::logout($request->get('refresh_token'))
-            ],
+            (bool) JWTHelper::logout(
+                $request->get('refresh_token')
+            ),
             HttpStatusCodes::SUCCESS_OK
         );
     }
@@ -108,7 +108,7 @@ class AuthController extends Controller {
      * @throws
      */
     public function register(Request $request) {
-        $this->validateRegisterPreCaptcha($request);
+        $this->validateRegister($request);
 
         if (!CaptchaHelper::validate($request->get('captcha_response'))) {
             return response()->json(
@@ -119,16 +119,14 @@ class AuthController extends Controller {
             );
         }
 
-        $this->validateRegisterPostCaptcha($request);
-
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->input('password')),
+            'password' => Hash::make($request->get('password')),
             'verify_email_token' => str_random(128)
         ]);
       
-        Mail::to($request->get('email'))->send(new RegisterConfirmation());
+        Mail::to($request->get('email'))->send(new RegisterConfirmation($user));
 
         return response()->json(
             $user,
@@ -149,10 +147,10 @@ class AuthController extends Controller {
 
         $user = User::where(
             'email',
-            $request->input('email')
+            $request->get('email')
         )->first();
 
-        $user->reset_password_token = str_random(100);
+        $user->reset_password_token = str_random(128);
 
         $user->save();
 
@@ -177,10 +175,10 @@ class AuthController extends Controller {
 
         $user = User::where(
             'reset_password_token',
-            $request->input('reset_password_token')
+            $request->get('reset_password_token')
         )->first();
 
-        $user->password = Hash::make($request->input('password'));
+        $user->password = Hash::make($request->get('password'));
         
         $user->reset_password_token = null;
 
@@ -206,7 +204,7 @@ class AuthController extends Controller {
 
         $user = User::where(
             'verify_email_token',
-            $request->input('verify_email_token')
+            $request->get('verify_email_token')
         )->first();
         
         $user->verify_email_token = null;
