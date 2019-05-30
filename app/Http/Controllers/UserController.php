@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\RefreshToken;
 use App\Http\Helpers\JWTHelper;
 use App\Http\Helpers\HttpStatusCodes;
 use App\Http\Validators\ValidatesUserRequests;
@@ -56,7 +55,7 @@ class UserController extends Controller
             JWTHelper::revokeAllRefreshTokens($user->id);
         }
 
-        return response()->json
+        return response()->json(
             $user,
             HttpStatusCodes::SUCCESS_OK
         );

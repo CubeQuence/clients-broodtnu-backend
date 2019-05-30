@@ -18,7 +18,7 @@ class CaptchaHelper {
      */
    public static function validate($captcha_response) {
 
-      if ($this->app->environment() !== 'production') {
+      if (env('APP_ENV') !== 'production') {
             return true;
       }
 

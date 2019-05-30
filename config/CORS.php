@@ -34,5 +34,5 @@ return [
     |
     */
 
-    'allow_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    'allow_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 ];

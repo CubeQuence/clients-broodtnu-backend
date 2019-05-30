@@ -14,8 +14,8 @@ class User extends Model {
         'name',
         'email',
         'password',
-        //'active',
-        //'address'
+        'reset_password_token',
+        'verify_email_token'
     ];
 
     /**
@@ -25,16 +25,15 @@ class User extends Model {
      */
     protected $hidden = [
         'password',
-        //'active'
+        'reset_password_token',
+        'verify_email_token'
     ];
 
     /**
      * Get all the refresh_tokens by the user.
-     *
-     * TODO: add return
      */
     public function refreshTokens()
     {
-        return $this->hasMany(RefreshToken::class, 'user_id');
+        return $this->hasMany(RefreshToken::class);
     }
 }

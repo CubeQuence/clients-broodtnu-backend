@@ -32,26 +32,11 @@ trait ValidatesAuthRequests
     }
 
     /**
-     * Validate register request input but don't check existing email
-     *
-     * @param  Request $request
-     */
-    protected function validateRegisterPreCaptcha(Request $request)
-    {
-        $this->validate($request, [
-            'captcha_response'  => 'required',
-            'name'              => 'required|max:50|alpha_num',
-            'email'             => 'required|max:255|email',
-            'password'          => 'required|min:8',
-        ]);
-    }
-
-    /**
      * Validate register request input
      *
      * @param  Request $request
      */
-    protected function validateRegisterPostCaptcha(Request $request)
+    protected function validateRegister(Request $request)
     {
         $this->validate($request, [
             'captcha_response'  => 'required',
@@ -74,7 +59,7 @@ trait ValidatesAuthRequests
             'email' => 'required|email|exists:users,email'
         ]);
 
-        // TODO: add response "Password reset completed" or somethin as not to show if a user exists.
+        // TODO: add response "Password reset completed" or something as not to show if a user exists.
     }
 
     /**

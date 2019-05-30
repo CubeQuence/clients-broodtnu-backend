@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RefreshToken extends Model
+class Tag extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,9 +12,8 @@ class RefreshToken extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'refresh_token',
-        'expires_at'
+        'name',
+        'color'
     ];
 
     /**
@@ -24,14 +23,17 @@ class RefreshToken extends Model
      */
     protected $dates = [
         'created_at',
-        'updated_at',
-        'expires_at'
+        'updated_at'
     ];
 
     /**
-     * Get the user of the refresh_token.
+     * Get all the products with this tag.
      */
-    function user() {
-        return $this->hasOne(User::class);
+    public function products()
+    {
+        // TODO: implement function
+        // all products
+        // where id of tag is in tags array return product
+        return $this->hasMany(Product::class);
     }
 }
