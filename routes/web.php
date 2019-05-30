@@ -31,13 +31,13 @@ $router->post('auth/reset', 'AuthController@resetPassword');
 $router->post('auth/verify', 'AuthController@verifyEmail');
 
 
-$router->group([/*'middleware' => 'auth'*/], function () use ($router) {
+$router->group(['middleware' => 'auth'], function () use ($router) {
     /**
-     * User Actions
+     * User
      */
-//    $router->get('user', 'UserController@index');
-//    $router->put('user', 'UserController@update');
-//    $router->delete('user', 'UserController@delete');
+    $router->get('user', 'UserController@index');
+    $router->put('user', 'UserController@update');
+    $router->delete('user', 'UserController@delete');
 
     /**
      * Products

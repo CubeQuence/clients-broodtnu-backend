@@ -25,4 +25,14 @@ class Tag extends Model
         'created_at',
         'updated_at'
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

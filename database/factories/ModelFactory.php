@@ -30,7 +30,7 @@ $factory->define(App\Models\User::class, function ($faker) {
 $factory->define(App\Models\Product::class, function ($faker) {
     return [
         'name' => $faker->unique()->text(16),
-        'description' => $faker->text(128),
+        'description' => $faker->text(32),
         'img_url' => $faker->imageUrl(),
         'price' => $faker->randomFloat(2, 0.10, 3.50),
         'tags' => [$faker->numberBetween(0, 5), $faker->numberBetween(0, 5)],

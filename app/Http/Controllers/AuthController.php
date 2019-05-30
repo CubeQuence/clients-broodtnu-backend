@@ -91,9 +91,9 @@ class AuthController extends Controller {
         $this->validateRefreshToken($request);
 
         return response()->json(
-            [
-                'success' => (bool) JWTHelper::logout($request->get('refresh_token'))
-            ],
+            (bool) JWTHelper::logout(
+                $request->get('refresh_token')
+            ),
             HttpStatusCodes::SUCCESS_OK
         );
     }
