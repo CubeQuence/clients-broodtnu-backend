@@ -50,8 +50,6 @@ trait ValidatesAuthRequests
      * Validate password reset request input
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validateRequestPasswordReset(Request $request)
     {
@@ -67,8 +65,6 @@ trait ValidatesAuthRequests
      * Validate password reset request input
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validatePasswordReset(Request $request)
     {
@@ -82,8 +78,6 @@ trait ValidatesAuthRequests
      * Validate verify email request input
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validateVerifyEmailToken(Request $request)
     {

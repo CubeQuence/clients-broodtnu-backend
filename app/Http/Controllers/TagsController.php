@@ -30,10 +30,10 @@ class TagsController extends Controller {
      * @return JsonResponse
      */
     public function show($id) {
-        $id = array_map('intval', explode(',', $id));
+        $ids = array_map('intval', explode(',', $id));
 
         return response()->json(
-            Tag::findOrFail($id),
+            Tag::findOrFail($ids),
             HttpStatusCodes::SUCCESS_OK
         );
     }
@@ -46,10 +46,10 @@ class TagsController extends Controller {
      * @return JsonResponse
      */
     public function showProducts($id) {
-        $id = array_map('intval', explode(',', $id));
+        $ids = array_map('intval', explode(',', $id));
 
         return response()->json(
-            Product::whereJsonContains('tags', $id)->get(),
+            Product::whereJsonContains('tags', $ids)->get(),
             HttpStatusCodes::SUCCESS_OK
         );
     }

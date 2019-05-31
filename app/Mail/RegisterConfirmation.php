@@ -12,6 +12,8 @@ class RegisterConfirmation extends Mailable
     /**
      * Create a new message instance.
      *
+     * @param User
+     *
      * @return void
      */
     public function __construct($user)

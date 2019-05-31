@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Mail\Mailable;
 
 class RequestResetPassword extends Mailable
@@ -9,6 +10,8 @@ class RequestResetPassword extends Mailable
 	public $user;
     /**
      * Create a new message instance.
+     *
+     * @param User $user
      *
      * @return void
      */

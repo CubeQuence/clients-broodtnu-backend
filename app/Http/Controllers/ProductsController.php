@@ -27,10 +27,10 @@ class ProductsController extends Controller {
      * @return JsonResponse
      */
     public function show($id) {
-        $id = array_map('intval', explode(',', $id));
+        $ids = array_map('intval', explode(',', $id));
 
         return response()->json(
-            Product::findOrFail($id),
+            Product::findOrFail($ids),
             HttpStatusCodes::SUCCESS_OK
         );
     }
