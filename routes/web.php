@@ -43,12 +43,20 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
      * Products
      */
     $router->get('products', 'ProductsController@index');
-    $router->get('products/{id}', 'ProductsController@show');
+    $router->get('products/{id:[0-9,]+}', 'ProductsController@show');
+
+    $router->post('products/{id:[0-9]+}', 'ProductsController@create');
+    $router->put('products/{id:[0-9]+}', 'ProductsController@update');
+    $router->delete('products/{id:[0-9]+}', 'ProductsController@delete');
 
     /**
      * Tags
      */
     $router->get('tags', 'TagsController@index');
-    $router->get('tags/{id}', 'TagsController@show');
-    $router->get('tags/{id}/products', 'TagsController@showProducts');
+    $router->get('tags/{id:[0-9,]+}', 'TagsController@show');
+    $router->get('tags/{id:[0-9,]+}/products', 'TagsController@showProducts');
+
+    $router->post('tags/{id:[0-9]+}', 'TagsController@create');
+    $router->put('tags/{id:[0-9]+}', 'TagsController@update');
+    $router->delete('tags/{id:[0-9]+}', 'TagsController@delete');
 });
