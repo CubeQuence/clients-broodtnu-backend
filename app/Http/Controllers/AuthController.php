@@ -11,6 +11,7 @@ use App\Http\Helpers\HttpStatusCodes;
 use App\Http\Validators\ValidatesAuthRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -123,7 +124,7 @@ class AuthController extends Controller {
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
-            'verify_email_token' => str_random(128)
+            'verify_email_token' => Str::random(128)
         ]);
       
         Mail::to($request->get('email'))->send(new RegisterConfirmation($user));
@@ -157,9 +158,9 @@ class AuthController extends Controller {
         $user = User::where(
             'email',
             $request->get('email')
-        )->first();
+        )->get();
 
-        $user->reset_password_token = str_random(128);
+        $user->reset_password_token = Str::random(128);
 
         $user->save();
 
