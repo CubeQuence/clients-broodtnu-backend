@@ -145,6 +145,15 @@ class AuthController extends Controller {
     public function requestResetPassword(Request $request) {
         $this->validateRequestPasswordReset($request);
 
+        if (!CaptchaHelper::validate($request->get('captcha_response'))) {
+            return response()->json(
+                [
+                    'error' => 'invalid captcha'
+                ],
+                HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED
+            );
+        }
+
         $user = User::where(
             'email',
             $request->get('email')

@@ -56,6 +56,7 @@ trait ValidatesAuthRequests
     protected function validateRequestPasswordReset(Request $request)
     {
         $this->validate($request, [
+            'captcha_response' => 'required',
             'email' => 'required|email|exists:users,email'
         ]);
 
