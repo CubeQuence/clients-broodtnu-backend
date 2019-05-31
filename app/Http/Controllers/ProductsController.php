@@ -38,7 +38,14 @@ class ProductsController extends Controller {
         );
     }
 
-    public function create(Request $request, $id) {
+    /**
+     * Create product
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function create(Request $request) {
         $this->validateCreate($request);
 
         $product = Product::create([
@@ -56,6 +63,14 @@ class ProductsController extends Controller {
         );
     }
 
+    /**
+     * Update product
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @return JsonResponse
+     */
     public function update(Request $request, $id) {
         $this->validateUpdate($request);
 
