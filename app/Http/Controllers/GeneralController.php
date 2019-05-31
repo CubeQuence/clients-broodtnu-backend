@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Helpers\HttpStatusCodes;
+use App\Helpers\HttpStatusCodes;
 use Illuminate\Http\JsonResponse;
 
 class GeneralController extends Controller {

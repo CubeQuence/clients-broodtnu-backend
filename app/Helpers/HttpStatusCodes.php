@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Helpers;
+namespace App\Helpers;
 
 abstract class HttpStatusCodes {
     const SUCCESS_OK = 200;

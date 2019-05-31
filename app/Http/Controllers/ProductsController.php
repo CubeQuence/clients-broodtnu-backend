@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Http\Helpers\HttpStatusCodes;
+use App\Helpers\HttpStatusCodes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -40,27 +40,19 @@ class ProductsController extends Controller {
         //
     }
 
-    public function update($id) {
+    public function update(Request $request, $id) {
         //
     }
 
     /**
      * Delete product
      *
-     * @param Request $request
      * @param $id
      *
      * @return JsonResponse
      */
-    public function delete(Request $request, $id) {
+    public function delete($id) {
         // TODO: add access_level system
-
-        if (!$request->user->active) {
-            return response()->json(
-                'access_denied',
-                HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED
-            );
-        }
 
         Product::findOrFail($id)->delete();
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Tag;
-use App\Http\Helpers\HttpStatusCodes;
+use App\Helpers\HttpStatusCodes;
 use Illuminate\Http\JsonResponse;
 
 class TagsController extends Controller {

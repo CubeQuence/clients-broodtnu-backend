@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Helpers\JWTHelper;
-use App\Http\Helpers\HttpStatusCodes;
-use App\Http\Validators\ValidatesUserRequests;
+use App\Helpers\JWTHelper;
+use App\Helpers\HttpStatusCodes;
+use App\Validators\ValidatesUserRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
