@@ -40,17 +40,19 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validateUpdate($request);
-
         $user = User::findOrFail($request->user->id);
+
+        $this->validateUpdate($request, $user);
+
         $user->update([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
+            'name' => $request->get('name', $user->name),
+            'email' => $request->get('email', $user->email),
             'password' => Hash::make($request->input('password'))
         ]);
+
         $user->save();
 
-        // If user resets password revoke all refresh_tokens
+        // If user changes password revoke all refresh_tokens
         if ($request->input('password')) {
             JWTHelper::revokeAllRefreshTokens($user->id);
         }

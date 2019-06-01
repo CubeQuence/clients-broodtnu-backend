@@ -72,17 +72,17 @@ class ProductsController extends Controller {
      * @return JsonResponse
      */
     public function update(Request $request, $id) {
-        $this->validateUpdate($request);
-
         $product = Product::findOrFail($id);
 
+        $this->validateUpdate($request, $product);
+
         $product->update([
-            'name' => $request->get('name'),
-            'description' => $request->get('description'),
-            'img_url' => $request->get('img_url'),
-            'price' => $request->get('price'),
-            'tags' => $request->get('tags'),
-            'recommended_addons' => $request->get('recommended_addons'),
+            'name' => $request->get('name', $product->name),
+            'description' => $request->get('description', $product->description),
+            'img_url' => $request->get('img_url', $product->img_url),
+            'price' => $request->get('price', $product->price),
+            'tags' => $request->get('tags', $product->tags),
+            'recommended_addons' => $request->get('recommended_addons', $product->recommended_addons),
         ]);
 
         $product->save();
