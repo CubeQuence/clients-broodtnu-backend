@@ -26,6 +26,8 @@ class GeneralController extends Controller {
                     'verify' => env('APP_URL') . '/auth/verify',
                     'reset_request' => env('APP_URL') . '/auth/reset/request',
                     'reset' => env('APP_URL') . '/auth/reset',
+                    'all sessions (GET)' => env('APP_URL') . '/auth/sessions',
+                    'revoke session (DELETE)' => env('APP_URL') . '/auth/sessions/1d538edd-881d-432f-b7aa-b37a54345767',
                 ],
                 'user' => [
                     'profile (GET)' => env('APP_URL') . '/auth/user',
@@ -36,12 +38,18 @@ class GeneralController extends Controller {
                     'all' => env('APP_URL') . '/products',
                     'single' => env('APP_URL') . '/products/1',
                     'multiple' => env('APP_URL') . '/products/1,2,3',
+                    'create (POST)' => env('APP_URL') . '/products',
+                    'update (PUT)' => env('APP_URL') . '/products/1',
+                    'delete (DELETE)' => env('APP_URL') . '/products/1',
                 ],
                 'tags (GET)' => [
                     'all' => env('APP_URL') . '/tags',
                     'single' => env('APP_URL') . '/tags/1',
                     'multiple' => env('APP_URL') . '/tags/1,2',
                     'products' => env('APP_URL') . '/tags/1,2/products',
+                    'create (POST)' => env('APP_URL') . '/tags',
+                    'update (PUT)' => env('APP_URL') . '/tags/1',
+                    'delete (DELETE)' => env('APP_URL') . '/tags/1',
                 ]
             ],
             HttpStatusCodes::SUCCESS_OK
