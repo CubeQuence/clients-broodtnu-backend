@@ -47,13 +47,13 @@ class UserController extends Controller
         $user->update([
             'name' => $request->get('name', $user->name),
             'email' => $request->get('email', $user->email),
-            'password' => Hash::make($request->input('password'))
+            'password' => $request->has('password') ? Hash::make($request->input('password')) : $user->password
         ]);
 
         $user->save();
 
         // If user changes password revoke all refresh_tokens
-        if ($request->input('password')) {
+        if ($request->has('password')) {
             JWTHelper::revokeAllRefreshTokens($user->id);
         }
 
