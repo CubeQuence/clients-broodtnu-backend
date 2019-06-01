@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Mail\RegisterConfirmation;
 use App\Mail\RequestResetPassword;
-use App\Http\Helpers\JWTHelper;
-use App\Http\Helpers\CaptchaHelper;
-use App\Http\Helpers\HttpStatusCodes;
-use App\Http\Validators\ValidatesAuthRequests;
+use App\Helpers\JWTHelper;
+use App\Helpers\CaptchaHelper;
+use App\Helpers\HttpStatusCodes;
+use App\Validators\ValidatesAuthRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -123,7 +124,7 @@ class AuthController extends Controller {
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
-            'verify_email_token' => str_random(128)
+            'verify_email_token' => Str::random(128)
         ]);
       
         Mail::to($request->get('email'))->send(new RegisterConfirmation($user));
@@ -145,12 +146,21 @@ class AuthController extends Controller {
     public function requestResetPassword(Request $request) {
         $this->validateRequestPasswordReset($request);
 
+        if (!CaptchaHelper::validate($request->get('captcha_response'))) {
+            return response()->json(
+                [
+                    'error' => 'invalid captcha'
+                ],
+                HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED
+            );
+        }
+
         $user = User::where(
             'email',
             $request->get('email')
-        )->first();
+        )->get();
 
-        $user->reset_password_token = str_random(128);
+        $user->reset_password_token = Str::random(128);
 
         $user->save();
 

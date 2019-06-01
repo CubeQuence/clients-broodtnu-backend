@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Validators;
+namespace App\Validators;
 
 use Illuminate\Http\Request;
 
@@ -50,13 +50,12 @@ trait ValidatesAuthRequests
      * Validate password reset request input
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validateRequestPasswordReset(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email|exists:users,email'
+            'captcha_response'  => 'required',
+            'email'             => 'required|email|exists:users,email'
         ]);
 
         // TODO: add response "Password reset completed" or something as not to show if a user exists.
@@ -66,14 +65,12 @@ trait ValidatesAuthRequests
      * Validate password reset request input
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validatePasswordReset(Request $request)
     {
         $this->validate($request, [
-            'reset_password_token' => 'required|exists:users,reset_password_token',
-            'password' => 'required'
+            'reset_password_token'  => 'required|exists:users,reset_password_token',
+            'password'              => 'required'
         ]);
     }
 
@@ -81,13 +78,11 @@ trait ValidatesAuthRequests
      * Validate verify email request input
      *
      * @param  Request $request
-     *
-     * @throws ValidationException
      */
     protected function validateVerifyEmailToken(Request $request)
     {
         $this->validate($request, [
-            'verify_email_token' => 'required|exists:users,verify_email_token'
+            'verify_email_token'    => 'required|exists:users,verify_email_token'
         ]);
     }
 }

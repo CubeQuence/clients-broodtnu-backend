@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Helpers\JWTHelper;
-use App\Http\Helpers\HttpStatusCodes;
-use App\Http\Validators\ValidatesUserRequests;
+use App\Helpers\JWTHelper;
+use App\Helpers\HttpStatusCodes;
+use App\Validators\ValidatesUserRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -40,18 +40,20 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validateUpdate($request);
-
         $user = User::findOrFail($request->user->id);
+
+        $this->validateUpdate($request, $user);
+
         $user->update([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->input('password'))
+            'name' => $request->get('name', $user->name),
+            'email' => $request->get('email', $user->email),
+            'password' => $request->has('password') ? Hash::make($request->input('password')) : $user->password
         ]);
+
         $user->save();
 
-        // If user resets password revoke all refresh_tokens
-        if ($request->input('password')) {
+        // If user changes password revoke all refresh_tokens
+        if ($request->has('password')) {
             JWTHelper::revokeAllRefreshTokens($user->id);
         }
 

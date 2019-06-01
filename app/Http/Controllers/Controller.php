@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
+use Illuminate\Http\JsonResponse;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController {
@@ -14,7 +13,7 @@ class Controller extends BaseController {
      * @param int $statusCode
      * @param array $headers
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respond($data, $statusCode = 200, $headers = [])
     {
@@ -23,7 +22,7 @@ class Controller extends BaseController {
     /**
      * Respond with success.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function respondSuccess()
     {

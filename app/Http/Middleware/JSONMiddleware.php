@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Http\Helpers\HttpStatusCodes;
+use App\Helpers\HttpStatusCodes;
 use Illuminate\Http\Request;
 
 class JSONMiddleware {

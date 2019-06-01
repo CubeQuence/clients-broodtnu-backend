@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Helpers;
+namespace App\Helpers;
 
 use App\Models\RefreshToken;
 use Illuminate\Support\Str;
