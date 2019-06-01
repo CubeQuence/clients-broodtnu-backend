@@ -31,7 +31,7 @@ $router->post('auth/reset', 'AuthController@resetPassword');
 $router->post('auth/verify', 'AuthController@verifyEmail');
 
 
-$router->group([/*'middleware' => 'auth'*/], function () use ($router) {
+$router->group(['middleware' => 'auth'], function () use ($router) {
     /**
      * User
      */
