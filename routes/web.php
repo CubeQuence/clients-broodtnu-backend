@@ -34,8 +34,8 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
      * Auth
      */
     $router->post('auth/logout', 'AuthController@logout');
-//    $router->get('auth/sessions', 'AuthController@showSessions');
-//    $router->delete('auth/sessions/{id:[0-9]+}', 'AuthController@revokeSession');
+    $router->get('auth/sessions', 'AuthController@showSessions');
+    $router->delete('auth/sessions/{uuid:[0-9a-z-]+}', 'AuthController@revokeSession');
 
     /**
      * User

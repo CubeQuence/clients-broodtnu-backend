@@ -18,7 +18,7 @@ class CaptchaHelper {
      */
    public static function validate($captcha_response) {
 
-      if (env('APP_ENV') !== 'production') {
+      if (config('app.debug')) {
             return true;
       }
 

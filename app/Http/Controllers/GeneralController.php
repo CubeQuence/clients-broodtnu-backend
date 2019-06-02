@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\HttpStatusCodes;
 use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 
 class GeneralController extends Controller {
 
@@ -17,39 +18,39 @@ class GeneralController extends Controller {
         return response()->json(
             [
                 'documentation_url (GET)' => 'https://docs.broodt.nu',
-                'meta (GET)' => env('APP_URL') . '/meta',
+                'meta (GET)' => config('app.url') . '/meta',
                 'auth (POST)' => [
-                    'register' => env('APP_URL') . '/auth/register',
-                    'login' => env('APP_URL') . '/auth/login',
-                    'logout' => env('APP_URL') . '/auth/logout',
-                    'refresh' => env('APP_URL') . '/auth/refresh',
-                    'verify' => env('APP_URL') . '/auth/verify',
-                    'reset_request' => env('APP_URL') . '/auth/reset/request',
-                    'reset' => env('APP_URL') . '/auth/reset',
-                    'all sessions (GET)' => env('APP_URL') . '/auth/sessions',
-                    'revoke session (DELETE)' => env('APP_URL') . '/auth/sessions/1d538edd-881d-432f-b7aa-b37a54345767',
+                    'register' => config('app.url') . '/auth/register',
+                    'login' => config('app.url') . '/auth/login',
+                    'logout' => config('app.url') . '/auth/logout',
+                    'refresh' => config('app.url') . '/auth/refresh',
+                    'verify' => config('app.url') . '/auth/verify',
+                    'reset_request' => config('app.url') . '/auth/reset/request',
+                    'reset' => config('app.url') . '/auth/reset',
+                    'all sessions (GET)' => config('app.url') . '/auth/sessions',
+                    'revoke specific session (DELETE)' => config('app.url') . '/auth/sessions/{session_uuid}',
                 ],
                 'user' => [
-                    'profile (GET)' => env('APP_URL') . '/auth/user',
-                    'update (PUT)' => env('APP_URL') . '/auth/user',
-                    'delete (DELETE)' => env('APP_URL') . '/auth/user',
+                    'profile (GET)' => config('app.url') . '/auth/user',
+                    'update (PUT)' => config('app.url') . '/auth/user',
+                    'delete (DELETE)' => config('app.url') . '/auth/user',
                 ],
                 'products (GET)' => [
-                    'all' => env('APP_URL') . '/products',
-                    'single' => env('APP_URL') . '/products/1',
-                    'multiple' => env('APP_URL') . '/products/1,2,3',
-                    'create (POST)' => env('APP_URL') . '/products',
-                    'update (PUT)' => env('APP_URL') . '/products/1',
-                    'delete (DELETE)' => env('APP_URL') . '/products/1',
+                    'all' => config('app.url') . '/products',
+                    'single' => config('app.url') . '/products/1',
+                    'multiple' => config('app.url') . '/products/1,2,3',
+                    'create (POST)' => config('app.url') . '/products',
+                    'update (PUT)' => config('app.url') . '/products/1',
+                    'delete (DELETE)' => config('app.url') . '/products/1',
                 ],
                 'tags (GET)' => [
-                    'all' => env('APP_URL') . '/tags',
-                    'single' => env('APP_URL') . '/tags/1',
-                    'multiple' => env('APP_URL') . '/tags/1,2',
-                    'products' => env('APP_URL') . '/tags/1,2/products',
-                    'create (POST)' => env('APP_URL') . '/tags',
-                    'update (PUT)' => env('APP_URL') . '/tags/1',
-                    'delete (DELETE)' => env('APP_URL') . '/tags/1',
+                    'all' => config('app.url') . '/tags',
+                    'single' => config('app.url') . '/tags/1',
+                    'multiple' => config('app.url') . '/tags/1,2',
+                    'products' => config('app.url') . '/tags/1,2/products',
+                    'create (POST)' => config('app.url') . '/tags',
+                    'update (PUT)' => config('app.url') . '/tags/1',
+                    'delete (DELETE)' => config('app.url') . '/tags/1',
                 ]
             ],
             HttpStatusCodes::SUCCESS_OK
@@ -65,7 +66,7 @@ class GeneralController extends Controller {
     {
         return response()->json(
             [
-                'time' => date('Y-m-d H:i:s'),
+                'time' => Carbon::now()->toDateTimeString(),
                 'captcha_public_key' => config('captcha.public_key'),
                 'jwt_public_key' => config('JWT.public_key')
             ],

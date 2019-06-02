@@ -24,7 +24,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         return response()->json(
-            User::findOrFail($request->user->id),
+            $request->user,
             HttpStatusCodes::SUCCESS_OK
         );
     }
@@ -40,7 +40,7 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::findOrFail($request->user->id);
+        $user = $request->user;
 
         $this->validateUpdate($request, $user);
 
@@ -73,7 +73,7 @@ class UserController extends Controller
     public function delete(Request $request)
     {
         JWTHelper::revokeAllRefreshTokens($request->user->id);
-        User::findOrFail($request->user->id)->delete();
+        $request->user->delete();
 
         return response()->json(
             null,

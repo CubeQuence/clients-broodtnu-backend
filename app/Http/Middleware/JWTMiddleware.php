@@ -28,8 +28,11 @@ class JWTMiddleware {
             return response()->json($credentials, $http_code);
         }
 
-        // Put the user in the request class so that you can grab it from there
+        // Put the user in the request
         $request->user = User::findOrFail($credentials->sub);
+
+        // Put the JWT in the request
+        $request->jwt = $credentials;
 
         return $next($request);
     }
