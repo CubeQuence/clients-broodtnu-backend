@@ -110,7 +110,7 @@ class JWTHelper {
         }
 
         try {
-            $credentials = JWT::decode($access_token, config('JWT.public_key'), [config('JWT.algorithm')]);
+            $credentials = JWT::decode($access_token, config('tokens.access_token.public_key'), [config('JWT.algorithm')]);
         } catch (ExpiredException $error) {
             return (object) [
                 'error' => 'access_token has expired.',
@@ -164,15 +164,15 @@ class JWTHelper {
      */
     private static function issueAccessToken($user_id, $user_ip) {
         $payload = [
-            'iss' => config('JWT.iss'),
-            'aud' => config('JWT.aud'),
+            'iss' => config('tokens.access_token.iss'),
+            'aud' => config('tokens.access_token.aud'),
             'sub' => $user_id,
             'sub_ip' => $user_ip,
             'iat' => time(),
-            'exp' => time() + config('JWT.ttl.access_token')
+            'exp' => time() + config('tokens.access_token.ttl')
         ];
 
-        return JWT::encode($payload, config('JWT.private_key'), config('JWT.algorithm'));
+        return JWT::encode($payload, config('tokens.access_token.private_key'), config('tokens.access_token.algorithm'));
     }
 
     /**
@@ -186,8 +186,8 @@ class JWTHelper {
         $refresh_token = new RefreshToken();
 
         $refresh_token->user_id = $user_id;
-        $refresh_token->refresh_token = Str::random(32);
-        $refresh_token->expires_at = time() + config('JWT.ttl.refresh_token');
+        $refresh_token->refresh_token = Str::random(config('tokens.refresh_token.length'));
+        $refresh_token->expires_at = time() + config('tokens.refresh_token.ttl');
 
         $refresh_token->save();
 

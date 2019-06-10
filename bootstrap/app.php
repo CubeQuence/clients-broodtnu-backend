@@ -37,9 +37,9 @@ $app->withEloquent();
 $app->configure('app');
 $app->configure('captcha');
 $app->configure('CORS');
-$app->configure('JWT');
 $app->configure('mail');
 $app->configure('services');
+$app->configure('tokens');
 
 
 /*

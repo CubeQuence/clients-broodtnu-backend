@@ -68,7 +68,7 @@ class GeneralController extends Controller {
             [
                 'time' => Carbon::now()->toDateTimeString(),
                 'captcha_public_key' => config('captcha.public_key'),
-                'jwt_public_key' => config('JWT.public_key')
+                'jwt_public_key' => config('tokens.access_token.public_key')
             ],
             HttpStatusCodes::SUCCESS_OK
         );
