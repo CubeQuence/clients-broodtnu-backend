@@ -165,7 +165,6 @@ class JWTHelper {
     private static function issueAccessToken($user_id, $user_ip) {
         $payload = [
             'iss' => config('tokens.access_token.iss'),
-            'aud' => config('tokens.access_token.aud'),
             'sub' => $user_id,
             'sub_ip' => $user_ip,
             'iat' => time(),

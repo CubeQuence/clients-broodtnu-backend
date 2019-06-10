@@ -13,7 +13,6 @@ return [
     'access_token' => [
         'algorithm' => 'RS256',         // Indicates which algorithm is used to sign and encrypt the JWT
         'iss' => env('APP_URL'),        // Indicates who issued the JWT
-        'aud' => env('APP_DOMAIN'),     // Indicates who the intended recipient of the JWT is
         'ttl' => 60 * 15,               // Indicates how long a JWT is valid
         'public_key' => str_replace(    // Indicates the JWT public key
             '||||',
