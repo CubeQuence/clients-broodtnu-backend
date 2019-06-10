@@ -80,4 +80,39 @@ class UserController extends Controller
             HttpStatusCodes::SUCCESS_NO_CONTENT
         );
     }
+
+    /**
+     * Show all sessions
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function showSessions(Request $request) {
+        $refresh_tokens = $request->user->refreshTokens();
+
+        return response()->json(
+            $refresh_tokens->get(),
+            HttpStatusCodes::SUCCESS_OK
+        );
+    }
+
+    /**
+     * Revoke a session
+     *
+     * @param Request $request
+     * @param $uuid
+     *
+     * @return JsonResponse
+     */
+    public function revokeSession(Request $request, $uuid) {
+        $request->user->refreshTokens()
+            ->findOrFail($uuid)
+            ->delete();
+
+        return response()->json(
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
+        );
+    }
 }

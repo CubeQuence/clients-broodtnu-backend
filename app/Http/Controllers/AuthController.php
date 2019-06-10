@@ -226,31 +226,4 @@ class AuthController extends Controller {
             HttpStatusCodes::SUCCESS_NO_CONTENT
         );
     }
-
-    /**
-     * Show all user sessions
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function showSessions(Request $request) {
-        $refreshtokens = $request->user->refreshTokens();
-
-        return response()->json(
-            $refreshtokens->get(),
-            HttpStatusCodes::SUCCESS_OK
-        );
-    }
-
-    public function revokeSession(Request $request, $uuid) {
-        $request->user->refreshTokens()
-            ->findOrFail($uuid)
-            ->delete();
-
-        return response()->json(
-            null,
-            HttpStatusCodes::SUCCESS_NO_CONTENT
-        );
-    }
 }
