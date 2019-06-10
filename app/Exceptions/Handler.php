@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler {
@@ -33,6 +34,7 @@ class Handler extends ExceptionHandler {
      *
      * @param Exception $exception
      * @return void
+     *
      * @throws Exception
      */
     public function report(Exception $exception)
@@ -45,11 +47,16 @@ class Handler extends ExceptionHandler {
      *
      * @param Request $request
      * @param Exception $exception
+     *
      * @return Response|JsonResponse
      */
     public function render($request, Exception $exception)
     {
         if ($exception instanceof ModelNotFoundException) {
+            return response()->json(['message' => 'Not found']);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
             return response()->json(['message' => 'Not found']);
         }
 
