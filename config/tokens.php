@@ -17,11 +17,13 @@ return [
         'ttl' => 60 * 15,               // Indicates how long a JWT is valid
         'public_key' => str_replace(    // Indicates the JWT public key
             '||||',
-            PHP_EOL, env('JWT_PUBLIC_KEY')
+            PHP_EOL,
+            env('JWT_PUBLIC_KEY')
         ),
         'private_key' => str_replace(   // Indicates the JWT private key
             '||||',
-            PHP_EOL, env('JWT_PRIVATE_KEY')
+            PHP_EOL,
+            env('JWT_PRIVATE_KEY')
         ),
     ],
 

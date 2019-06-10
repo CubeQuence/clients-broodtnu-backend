@@ -110,7 +110,7 @@ class JWTHelper {
         }
 
         try {
-            $credentials = JWT::decode($access_token, config('tokens.access_token.public_key'), [config('JWT.algorithm')]);
+            $credentials = JWT::decode($access_token, config('tokens.access_token.public_key'), [config('tokens.access_token.algorithm')]);
         } catch (ExpiredException $error) {
             return (object) [
                 'error' => 'access_token has expired.',
