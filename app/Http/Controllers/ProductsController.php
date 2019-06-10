@@ -101,8 +101,6 @@ class ProductsController extends Controller {
      * @return JsonResponse
      */
     public function delete($id) {
-        // TODO: add access_level system
-
         Product::findOrFail($id)->delete();
 
         return response()->json(

@@ -31,7 +31,7 @@ class RegisterConfirmation extends Mailable
         return $this->markdown(
             'mail.RegisterConfirmation',
             [
-                'verifyEmailUrl' => env('APP_DOMAIN') . '/auth/verify/' . $this->user->verify_email_token
+                'verifyEmailUrl' => config('app.domain') . '/auth/verify/' . $this->user->verify_email_token
             ]
         );
     }

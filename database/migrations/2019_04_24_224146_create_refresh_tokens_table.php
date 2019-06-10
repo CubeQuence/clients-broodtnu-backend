@@ -14,10 +14,11 @@ class CreateRefreshTokensTable extends Migration
     public static function up()
     {
         Schema::create('refresh_tokens', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('id')->primary();
             $table->integer('user_id');
             $table->string('refresh_token')->unique();
             $table->timestamp('expires_at');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ Reset password
 @endcomponent
 
 Thanks,<br>
-{{ env('APP_NAME') }}<br>
-{{ env('APP_DOMAIN') }}
+{{ config('app.name') }}<br>
+{{ config('app.domain') }}
 
 @endcomponent
