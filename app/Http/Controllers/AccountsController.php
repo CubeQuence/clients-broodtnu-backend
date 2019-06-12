@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Helpers\JWTHelper;
+use App\Helpers\AuthHelper;
 use App\Helpers\HttpStatusCodes;
+use App\Models\User;
 use App\Validators\ValidatesAccountsRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -23,8 +23,10 @@ class AccountsController extends Controller
      */
     public function index(Request $request)
     {
+        $user = User::findOrFail($request->user_id);
+
         return response()->json(
-            $request->user,
+            $user,
             HttpStatusCodes::SUCCESS_OK
         );
     }
@@ -40,7 +42,7 @@ class AccountsController extends Controller
      */
     public function update(Request $request)
     {
-        $user = $request->user;
+        $user = User::findOrFail($request->user_id);
 
         $this->validateUpdate($request, $user);
 
@@ -54,7 +56,7 @@ class AccountsController extends Controller
 
         // If user changes password revoke all refresh_tokens
         if ($request->has('password')) {
-            JWTHelper::revokeAllRefreshTokens($user->id);
+            AuthHelper::revokeAllRefreshTokens($user->id);
         }
 
         return response()->json(
@@ -72,8 +74,10 @@ class AccountsController extends Controller
      */
     public function delete(Request $request)
     {
-        JWTHelper::revokeAllRefreshTokens($request->user->id);
-        $request->user->delete();
+        $user = User::findOrFail($request->user_id);
+        $user->delete();
+
+        AuthHelper::revokeAllRefreshTokens($request->user_id);
 
         return response()->json(
             null,
@@ -89,30 +93,12 @@ class AccountsController extends Controller
      * @return JsonResponse
      */
     public function showSessions(Request $request) {
-        $refresh_tokens = $request->user->refreshTokens();
+        $user = User::findOrFail($request->user_id);
+        $refresh_tokens = $user->refreshTokens();
 
         return response()->json(
             $refresh_tokens->get(),
             HttpStatusCodes::SUCCESS_OK
-        );
-    }
-
-    /**
-     * Revoke a session
-     *
-     * @param Request $request
-     * @param $uuid
-     *
-     * @return JsonResponse
-     */
-    public function revokeSession(Request $request, $uuid) {
-        $request->user->refreshTokens()
-            ->findOrFail($uuid)
-            ->delete();
-
-        return response()->json(
-            null,
-            HttpStatusCodes::SUCCESS_NO_CONTENT
         );
     }
 }

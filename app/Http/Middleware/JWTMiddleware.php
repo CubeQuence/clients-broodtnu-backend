@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Models\User;
-use App\Helpers\JWTHelper;
+use App\Helpers\AuthHelper;
 use Illuminate\Http\Request;
 
 class JWTMiddleware {
@@ -18,8 +18,8 @@ class JWTMiddleware {
      */
     public function handle(Request $request, Closure $next)
     {
-        $access_token = JWTHelper::parseAuthHeader($request);
-        $credentials = JWTHelper::authenticate($access_token, $request->ip());
+        $access_token = AuthHelper::parseAuthHeader($request->headers->get('Authorization'));
+        $credentials = AuthHelper::validateAccessToken($access_token, $request->ip());
 
         // Returns an error message for an invalid token
         if (isset($credentials->error)) {
@@ -28,11 +28,8 @@ class JWTMiddleware {
             return response()->json($credentials, $http_code);
         }
 
-        // Put the user in the request
-        $request->user = User::findOrFail($credentials->sub);
-
-        // Put the JWT in the request
-        $request->jwt = $credentials;
+        // Put the user_id in the request
+        $request->user_id = $credentials->sub;
 
         return $next($request);
     }

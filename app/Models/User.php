@@ -44,6 +44,6 @@ class User extends Model {
      */
     public function refreshTokens()
     {
-        return $this->hasMany(RefreshToken::class);
+        return $this->hasMany(Session::class);
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Mail\RegisterConfirmation;
-use App\Mail\RequestResetPassword;
-use App\Helpers\JWTHelper;
+use App\Mail\RegisterConfirmationMail;
+use App\Mail\RequestResetPasswordMail;
+use App\Helpers\AuthHelper;
 use App\Helpers\CaptchaHelper;
 use App\Helpers\HttpStatusCodes;
 use App\Validators\ValidatesAuthRequests;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
@@ -50,9 +51,10 @@ class AuthController extends Controller {
         }
 
         return response()->json(
-            JWTHelper::issue(
+            AuthHelper::login(
                 $user->id,
-                $request->ip()
+                $request->ip(),
+                $request->header('user-agent')
             ),
             HttpStatusCodes::SUCCESS_OK
         );
@@ -68,12 +70,14 @@ class AuthController extends Controller {
      * @throws
      */
     public function refresh(Request $request) {
-        $this->validateRefreshToken($request);
+        $this->validateRefresh($request);
 
         return response()->json(
-            JWTHelper::refresh(
+            AuthHelper::refresh(
+                $request->get('session_uuid'),
                 $request->get('refresh_token'),
-                $request->ip()
+                $request->ip(),
+                $request->header('user-agent')
             ),
             HttpStatusCodes::SUCCESS_OK
         );
@@ -89,13 +93,15 @@ class AuthController extends Controller {
      * @throws
      */
     public function logout(Request $request) {
-        $this->validateRefreshToken($request);
+        $this->validateLogout($request);
+
+        if (!AuthHelper::logout($request->user_id, $request->get('session_uuid'))) {
+            throw new ModelNotFoundException();
+        }
 
         return response()->json(
-            (bool) JWTHelper::logout(
-                $request->get('refresh_token')
-            ),
-            HttpStatusCodes::SUCCESS_OK
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
         );
     }
 
@@ -124,10 +130,10 @@ class AuthController extends Controller {
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
-            'verify_email_token' => Str::random(128)
+            'verify_email_token' => Str::random(config('tokens.verify_mail_token.length'))
         ]);
       
-        Mail::to($request->get('email'))->send(new RegisterConfirmation($user));
+        Mail::to($request->get('email'))->send(new RegisterConfirmationMail($user));
 
         return response()->json(
             $user,
@@ -160,11 +166,11 @@ class AuthController extends Controller {
             $request->get('email')
         )->get();
 
-        $user->reset_password_token = Str::random(128);
+        $user->reset_password_token = Str::random(config('tokens.reset_password_token.length'));
 
         $user->save();
 
-        Mail::to($request->get('email'))->send(new RequestResetPassword($user));
+        Mail::to($request->get('email'))->send(new RequestResetPasswordMail($user));
 
         return response()->json(
             null,
