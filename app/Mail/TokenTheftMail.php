@@ -2,23 +2,23 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Mail\Mailable;
 
-
-class RegisterConfirmation extends Mailable
+class TokenTheftMail extends Mailable
 {
-	public $user;
+    private $sessionUUID;
+
     /**
      * Create a new message instance.
      *
-     * @param User
+     * @param $session_uuid
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($session_uuid)
     {
-        $this->user = $user;
+        $this->sessionUUID = $session_uuid;
     }
 
     /**
@@ -29,9 +29,10 @@ class RegisterConfirmation extends Mailable
     public function build()
     {
         return $this->markdown(
-            'mail.RegisterConfirmation',
+            'mail.TokenTheft',
             [
-                'verifyEmailUrl' => config('app.domain') . '/auth/verify/' . $this->user->verify_email_token
+                'time' => Carbon::now(),
+                'session_uuid' => $this->sessionUUID
             ]
         );
     }

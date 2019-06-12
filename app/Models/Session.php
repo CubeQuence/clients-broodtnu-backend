@@ -6,7 +6,7 @@ use App\Traits\UUIDS;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RefreshToken extends Model
+class Session extends Model
 {
     /**
      * Keep the session info but revoke access
@@ -19,14 +19,24 @@ class RefreshToken extends Model
     use UUIDS;
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
         'user_id',
-        'refresh_token',
-        'expires_at'
+        'user_ip',
+        'user_agent',
+        'refresh_token_hash',
+        'refresh_token_hash_old',
+        'refresh_token_expires'
     ];
 
     /**
@@ -37,8 +47,8 @@ class RefreshToken extends Model
     protected $dates = [
         'created_at',
         'updated_at',
-        'expires_at',
-        'deleted_at'
+        'deleted_at',
+        'refresh_token_expires'
     ];
 
     /**
@@ -47,21 +57,15 @@ class RefreshToken extends Model
      * @var array
      */
     protected $hidden = [
-        'refresh_token',
         'user_id',
-        'deleted_at'
+        'deleted_at',
+        'updated_at',
+        'refresh_token_hash',
+        'refresh_token_hash_old'
     ];
 
     /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-
-    /**
-     * Get the user of the refresh_token.
+     * Define relationship.
      */
     function user() {
         return $this->belongsTo(User::class);

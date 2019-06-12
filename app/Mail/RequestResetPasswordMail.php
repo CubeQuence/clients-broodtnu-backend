@@ -5,9 +5,10 @@ namespace App\Mail;
 use App\Models\User;
 use Illuminate\Mail\Mailable;
 
-class RequestResetPassword extends Mailable
+class RequestResetPasswordMail extends Mailable
 {
 	public $user;
+
     /**
      * Create a new message instance.
      *

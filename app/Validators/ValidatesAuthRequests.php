@@ -20,14 +20,27 @@ trait ValidatesAuthRequests
     }
 
     /**
-     * Validate refresh_token input
+     * Validate refresh request input
      *
      * @param  Request $request
      */
-    protected function validateRefreshToken(Request $request)
+    protected function validateRefresh(Request $request)
     {
         $this->validate($request, [
-            'refresh_token' => 'required|size:32|alpha_num'
+            'session_uuid'  => 'required|size:36|alpha_dash',
+            'refresh_token' => 'required|size:256|alpha_num'
+        ]);
+    }
+
+    /**
+     * Validate logout request input
+     *
+     * @param  Request $request
+     */
+    protected function validateLogout(Request $request)
+    {
+        $this->validate($request, [
+            'session_uuid'  => 'required|size:36|alpha_dash',
         ]);
     }
 
