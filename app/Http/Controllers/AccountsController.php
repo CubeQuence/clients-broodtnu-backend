@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Helpers\JWTHelper;
 use App\Helpers\HttpStatusCodes;
-use App\Validators\ValidatesUserRequests;
+use App\Validators\ValidatesAccountsRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class AccountsController extends Controller
 {
-    use ValidatesUserRequests;
+    use ValidatesAccountsRequests;
 
     /**
      * View user account

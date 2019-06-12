@@ -5,7 +5,7 @@ namespace App\Validators;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-trait ValidatesUserRequests
+trait ValidatesAccountsRequests
 {
     /**
      * Validate user info update
