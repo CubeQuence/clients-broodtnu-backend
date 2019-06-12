@@ -36,13 +36,13 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->post('auth/logout', 'AuthController@logout');
 
     /**
-     * User
+     * Account
      */
-    $router->get('user', 'UserController@index');
-    $router->put('user', 'UserController@update');
-    $router->delete('user', 'UserController@delete');
-    $router->get('user/sessions', 'UserController@showSessions');
-    $router->delete('user/sessions/{uuid:[0-9a-z-]+}', 'UserController@revokeSession');
+    $router->get('account', 'AccountsController@index');
+    $router->put('account', 'AccountsController@update');
+    $router->delete('account', 'AccountsController@delete');
+    $router->get('account/sessions', 'AccountsController@showSessions');
+    $router->delete('account/sessions/{uuid:[0-9a-z-]+}', 'AccountsController@revokeSession');
 
     /**
      * Products
