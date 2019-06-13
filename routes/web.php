@@ -15,7 +15,6 @@
  * General
  */
 $router->get('/', 'GeneralController@index');
-$router->get('meta', 'GeneralController@meta');
 
 
 /**
