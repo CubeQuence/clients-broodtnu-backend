@@ -283,7 +283,7 @@ class AuthHelper {
     {
         if (!$access_token) {
             return (object) [
-                'error' => 'access_token not provided.',
+                'error' => 'access_token not provided',
                 'http' => HttpStatusCodes::CLIENT_ERROR_UNAUTHORIZED,
             ];
         }

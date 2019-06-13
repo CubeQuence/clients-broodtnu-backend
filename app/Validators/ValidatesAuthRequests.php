@@ -81,8 +81,10 @@ trait ValidatesAuthRequests
      */
     protected function validatePasswordReset(Request $request)
     {
+        $token_length = config('tokens.reset_password_token.length');
+
         $this->validate($request, [
-            'reset_password_token'  => 'required|exists:users,reset_password_token',
+            'reset_password_token'  => "required|size:{$token_length}|exists:users,reset_password_token",
             'password'              => 'required'
         ]);
     }
@@ -94,8 +96,10 @@ trait ValidatesAuthRequests
      */
     protected function validateVerifyEmailToken(Request $request)
     {
+        $token_length = config('tokens.verify_mail_token.length');
+
         $this->validate($request, [
-            'verify_email_token'    => 'required|exists:users,verify_email_token'
+            'verify_email_token'    => "required|size:{$token_length}|exists:users,verify_email_token",
         ]);
     }
 }
