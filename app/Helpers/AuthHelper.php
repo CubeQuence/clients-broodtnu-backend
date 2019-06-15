@@ -41,7 +41,6 @@ class AuthHelper {
 
         return [
             'access_token' => $access_token,
-            'session_uuid' => $session->session_uuid,
             'refresh_token' => $session->refresh_token,
         ];
     }
@@ -107,7 +106,6 @@ class AuthHelper {
 
         return [
             'access_token' => $access_token,
-            'session_uuid' => $session->session_uuid,
             'refresh_token' => $session->refresh_token,
         ];
     }
@@ -176,7 +174,7 @@ class AuthHelper {
             'iss' => config('tokens.access_token.iss'),
             'sub' => $user_id,
             'sub_ip' => $user_ip,
-            'session' => $session_uuid,
+            'session_uuid' => $session_uuid,
             'iat' => time(),
             'exp' => time() + config('tokens.access_token.ttl'),
         ];

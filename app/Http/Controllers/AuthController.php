@@ -95,7 +95,7 @@ class AuthController extends Controller {
     public function logout(Request $request) {
         $this->validateLogout($request);
 
-        if (!AuthHelper::logout($request->user_id, $request->get('session_uuid'))) {
+        if (!AuthHelper::logout($request->user_id, $request->session_uuid)) {
             throw new ModelNotFoundException();
         }
 
