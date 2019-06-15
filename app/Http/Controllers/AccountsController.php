@@ -6,6 +6,7 @@ use App\Helpers\AuthHelper;
 use App\Helpers\HttpStatusCodes;
 use App\Models\User;
 use App\Validators\ValidatesAccountsRequests;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -99,6 +100,39 @@ class AccountsController extends Controller
         return response()->json(
             $refresh_tokens->get(),
             HttpStatusCodes::SUCCESS_OK
+        );
+    }
+
+    /**
+     * Revoke the refresh_token
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws
+     */
+    public function logout(Request $request) {
+        $this->validateRevoke($request);
+
+        $session_uuid = $request->get('session_uuid');
+
+        if ($session_uuid === $request->session_uuid) {
+            return response()->json(
+                [
+                    'error' => "you can't revoke current session, please use logout endpoint"
+                ],
+                HttpStatusCodes::CLIENT_ERROR_BAD_REQUEST
+            );
+        }
+
+        if (!AuthHelper::logout($request->user_id, $request->get('session_uuid'))) {
+            throw new ModelNotFoundException();
+        }
+
+        return response()->json(
+            null,
+            HttpStatusCodes::SUCCESS_NO_CONTENT
         );
     }
 }

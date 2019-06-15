@@ -41,7 +41,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->put('account', 'AccountsController@update');
     $router->delete('account', 'AccountsController@delete');
     $router->get('account/sessions', 'AccountsController@showSessions');
-    $router->delete('account/sessions', 'AuthController@logout');
+    $router->delete('account/sessions', 'AccountsController@revoke');
 
     /**
      * Products

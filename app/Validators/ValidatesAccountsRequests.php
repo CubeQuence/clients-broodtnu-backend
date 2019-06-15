@@ -27,4 +27,16 @@ trait ValidatesAccountsRequests
             'password'  => 'sometimes|min:8',
         ]);
     }
+
+    /**
+     * Validate revoke request input
+     *
+     * @param  Request $request
+     */
+    protected function validateRevoke(Request $request)
+    {
+        $this->validate($request, [
+            'session_uuid'  => 'required|size:36|alpha_dash',
+        ]);
+    }
 }

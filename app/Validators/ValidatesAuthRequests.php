@@ -33,18 +33,6 @@ trait ValidatesAuthRequests
     }
 
     /**
-     * Validate logout request input
-     *
-     * @param  Request $request
-     */
-    protected function validateLogout(Request $request)
-    {
-        $this->validate($request, [
-            'session_uuid'  => 'required|size:36|alpha_dash',
-        ]);
-    }
-
-    /**
      * Validate register request input
      *
      * @param  Request $request
