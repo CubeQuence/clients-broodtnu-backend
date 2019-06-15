@@ -112,7 +112,7 @@ class AccountsController extends Controller
      *
      * @throws
      */
-    public function logout(Request $request) {
+    public function revoke(Request $request) {
         $this->validateRevoke($request);
 
         $session_uuid = $request->get('session_uuid');
