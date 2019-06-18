@@ -44,14 +44,23 @@ class JWTGenerateCommand extends Command
         $path = base_path('.env');
 
         if (!file_exists($path)) {
-            $this->error('.env not found. You will have to set the keys manually.');
-            $this->error('');
+            $this->error("JWT keypair not set successfully. (bit size: {$bits})");
+            $this->error('.env file not found. Please set keys manually.');
+
+            $this->info('');
+
+            $this->info('Private key: ');
             $this->line($key['privatekey']);
-            $this->line('');
+
+            $this->info('');
+
+            $this->info('Public key: ');
             $this->line($key['publickey']);
 
             return;
         }
+
+        $this->info("JWT keypair set successfully. (bit size: {$bits})");
 
         file_put_contents($path, str_replace(
             'JWT_PRIVATE_KEY="' . env('JWT_PRIVATE_KEY') . '"', 'JWT_PRIVATE_KEY="' . str_replace(["\r","\n"],'||',$key['privatekey']) . '"', file_get_contents($path)
@@ -60,8 +69,6 @@ class JWTGenerateCommand extends Command
         file_put_contents($path, str_replace(
             'JWT_PUBLIC_KEY="' . env('JWT_PUBLIC_KEY') . '"', 'JWT_PUBLIC_KEY="' . str_replace(["\r","\n"],'||',$key['publickey']) . '"', file_get_contents($path)
         ));
-
-        $this->info('JWT keypair set successfully.');
 
         return;
     }
