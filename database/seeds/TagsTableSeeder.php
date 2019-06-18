@@ -12,10 +12,11 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        Tag::create(['name' => 'Vegetarisch', 'color' => 'green']);
-        Tag::create(['name' => 'Vis', 'color' => 'blue']);
-        Tag::create(['name' => 'Kip', 'color' => 'grey']);
+        Tag::create(['name' => 'Vega', 'color' => 'green']);
+        Tag::create(['name' => 'Gevogelte', 'color' => 'blue']);
+        Tag::create(['name' => 'Rund', 'color' => 'grey']);
         Tag::create(['name' => 'Varken', 'color' => 'pink']);
-        Tag::create(['name' => 'Koe', 'color' => 'brown']);
+        Tag::create(['name' => 'Vis', 'color' => 'brown']);
+        Tag::create(['name' => 'Halal', 'color' => 'brown']);
     }
 }

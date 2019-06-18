@@ -30,10 +30,10 @@ $factory->define(App\Models\User::class, function ($faker) {
 $factory->define(App\Models\Product::class, function ($faker) {
     return [
         'name' => $faker->unique()->text(16),
-        'description' => $faker->text(32),
         'img_url' => $faker->imageUrl(),
         'price' => $faker->randomFloat(2, 0.10, 3.50),
-        'tags' => [$faker->numberBetween(0, 5), $faker->numberBetween(0, 5)],
+        'is_healthy' => $faker->boolean(),
+        'tags' => [$faker->numberBetween(0, 6), $faker->numberBetween(0, 6)],
         'recommended_addons' => [$faker->numberBetween(0,25), $faker->numberBetween(0,25)],
     ];
 });
